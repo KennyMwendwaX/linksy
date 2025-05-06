@@ -4,7 +4,7 @@ import FeaturesSection from "./components/home/features-section";
 import Footer from "./components/home/footer";
 import HeroSection from "./components/home/hero-section";
 import HowItWorksSection from "./components/home/how-it-works-section";
-import Navbar from "./components/home/navbar";
+import Header from "./components/home/header";
 import PricingSection from "./components/home/pricing-section";
 import TestimonialsSection from "./components/home/testimonials-section";
 import { auth } from "@/lib/auth";
@@ -16,7 +16,7 @@ export default async function Home() {
   });
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar session={session} />
+      <Header session={session} />
       <main className="flex-grow">
         <HeroSection />
         <FeaturesSection />

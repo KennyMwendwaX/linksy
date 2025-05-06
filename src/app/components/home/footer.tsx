@@ -1,6 +1,13 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { LinkIcon, Facebook, Twitter, Instagram, Linkedin, Github } from "lucide-react"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  LinkIcon,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Github,
+} from "lucide-react";
 
 export default function Footer() {
   return (
@@ -12,18 +19,18 @@ export default function Footer() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                 <LinkIcon className="h-5 w-5" />
               </div>
-              <span className="text-xl font-bold tracking-tight">linksly</span>
+              <span className="text-xl font-bold tracking-tight">linksy</span>
             </Link>
             <p className="text-muted-foreground mb-4 max-w-xs">
-              Simplify your links, amplify your reach. The all-in-one platform for URL shortening and link management.
+              Simplify your links, amplify your reach. The all-in-one platform
+              for URL shortening and link management.
             </p>
             <div className="flex gap-4">
               <Button
                 variant="ghost"
                 size="icon"
                 className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
-                asChild
-              >
+                asChild>
                 <Link href="#" aria-label="Facebook">
                   <Facebook className="h-4 w-4" />
                 </Link>
@@ -32,8 +39,7 @@ export default function Footer() {
                 variant="ghost"
                 size="icon"
                 className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
-                asChild
-              >
+                asChild>
                 <Link href="#" aria-label="Twitter">
                   <Twitter className="h-4 w-4" />
                 </Link>
@@ -42,8 +48,7 @@ export default function Footer() {
                 variant="ghost"
                 size="icon"
                 className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
-                asChild
-              >
+                asChild>
                 <Link href="#" aria-label="Instagram">
                   <Instagram className="h-4 w-4" />
                 </Link>
@@ -52,8 +57,7 @@ export default function Footer() {
                 variant="ghost"
                 size="icon"
                 className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
-                asChild
-              >
+                asChild>
                 <Link href="#" aria-label="LinkedIn">
                   <Linkedin className="h-4 w-4" />
                 </Link>
@@ -62,8 +66,7 @@ export default function Footer() {
                 variant="ghost"
                 size="icon"
                 className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
-                asChild
-              >
+                asChild>
                 <Link href="#" aria-label="GitHub">
                   <Github className="h-4 w-4" />
                 </Link>
@@ -75,22 +78,30 @@ export default function Footer() {
             <h3 className="text-sm font-semibold mb-4">Product</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="#features"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Features
                 </Link>
               </li>
               <li>
-                <Link href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="#pricing"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/integrations" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/integrations"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Integrations
                 </Link>
               </li>
               <li>
-                <Link href="/api" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/api"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   API
                 </Link>
               </li>
@@ -101,22 +112,30 @@ export default function Footer() {
             <h3 className="text-sm font-semibold mb-4">Resources</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/blog" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/blog"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="/help" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/help"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/guides" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/guides"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Guides
                 </Link>
               </li>
               <li>
-                <Link href="/status" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/status"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Status
                 </Link>
               </li>
@@ -127,22 +146,30 @@ export default function Footer() {
             <h3 className="text-sm font-semibold mb-4">Company</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/about"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/careers"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/contact"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link href="/legal" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/legal"
+                  className="text-muted-foreground hover:text-foreground transition-colors">
                   Legal
                 </Link>
               </li>
@@ -152,15 +179,23 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Linksly. All rights reserved.</p>
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} Linksy. All rights reserved.
+            </p>
             <div className="flex gap-4">
-              <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="/privacy"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="/terms"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Terms of Service
               </Link>
-              <Link href="/cookies" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="/cookies"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Cookie Policy
               </Link>
             </div>
@@ -168,5 +203,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

@@ -25,7 +25,7 @@ export default function SignInPage() {
       <Card className="w-full max-w-lg mx-auto">
         <CardHeader className="space-y-1 py-4">
           <CardTitle className="text-xl text-center">
-            Welcome to Linksly
+            Welcome to Linksy
           </CardTitle>
           <CardDescription className="text-center text-sm">
             Sign in to your account or create a new one

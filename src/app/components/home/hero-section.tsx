@@ -44,7 +44,7 @@ export default function HeroSection() {
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               Shorten, customize, and track your links in one powerful platform.
-              Take control of your online presence with Linksly.
+              Take control of your online presence with Linksy.
             </p>
           </div>
 
@@ -84,13 +84,13 @@ export default function HeroSection() {
                   <div className="h-3 w-3 rounded-full bg-green-500"></div>
                 </div>
                 <div className="ml-2 text-xs font-medium text-muted-foreground">
-                  linksly.app
+                  linksy.app
                 </div>
               </div>
               <div className="p-1">
                 <Image
                   src="/placeholder.svg?height=600&width=1200"
-                  alt="Linksly Dashboard Preview"
+                  alt="Linksy Dashboard Preview"
                   width={1200}
                   height={600}
                   className="rounded-lg"

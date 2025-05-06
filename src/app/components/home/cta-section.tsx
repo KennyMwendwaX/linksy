@@ -15,8 +15,8 @@ export default function CtaSection() {
               Ready to Simplify Your Link Management?
             </h2>
             <p className="mt-4 text-lg text-primary-foreground/80 md:text-xl">
-              Join thousands of professionals who trust Linksly to manage,
-              track, and optimize their links.
+              Join thousands of professionals who trust Linksy to manage, track,
+              and optimize their links.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
               <Button

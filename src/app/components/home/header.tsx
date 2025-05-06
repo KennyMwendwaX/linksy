@@ -21,7 +21,7 @@ interface Props {
   session: Session | null;
 }
 
-export default function Navbar({ session }: Props) {
+export default function Header({ session }: Props) {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -48,10 +48,10 @@ export default function Navbar({ session }: Props) {
         {/* Logo & Brand */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <LinkIcon className="h-5 w-5" />
             </div>
-            <span className="text-xl font-bold tracking-tight">linksly</span>
+            <span className="text-xl font-bold tracking-tight">linksy</span>
           </Link>
         </div>
 
@@ -148,7 +148,7 @@ export default function Navbar({ session }: Props) {
                         <LinkIcon className="h-5 w-5" />
                       </div>
                       <SheetTitle className="text-xl font-bold tracking-tight">
-                        linksly
+                        linksy
                       </SheetTitle>
                     </Link>
                   </div>

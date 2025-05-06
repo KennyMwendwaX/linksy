@@ -5,7 +5,7 @@ export default function TestimonialsSection() {
   const testimonials = [
     {
       quote:
-        "Linksly has transformed how we manage our marketing campaigns. The analytics are incredibly detailed and the custom templates have helped strengthen our brand.",
+        "Linksy has transformed how we manage our marketing campaigns. The analytics are incredibly detailed and the custom templates have helped strengthen our brand.",
       author: "Sarah Johnson",
       role: "Marketing Director",
       company: "TechCorp",
@@ -13,7 +13,7 @@ export default function TestimonialsSection() {
     },
     {
       quote:
-        "As a content creator, I need reliable tools that make sharing easy. Linksly delivers with its simple interface and powerful tracking features.",
+        "As a content creator, I need reliable tools that make sharing easy. Linksy delivers with its simple interface and powerful tracking features.",
       author: "Michael Chen",
       role: "Content Creator",
       company: "Digital Nomad",
@@ -45,7 +45,7 @@ export default function TestimonialsSection() {
           </h2>
           <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">
             See what our customers have to say about their experience with
-            Linksly.
+            Linksy.
           </p>
         </div>
 

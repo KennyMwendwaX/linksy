@@ -43,7 +43,7 @@ export default function HowItWorksSection() {
             Simple Process, Powerful Results
           </h2>
           <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">
-            Get started with Linksly in just a few simple steps and transform
+            Get started with Linksy in just a few simple steps and transform
             your link management experience.
           </p>
         </div>
@@ -111,7 +111,7 @@ export default function HowItWorksSection() {
                   <div className="w-full">
                     <Image
                       src="/placeholder.svg?height=300&width=500"
-                      alt="Linksly Dashboard"
+                      alt="Linksy Dashboard"
                       width={500}
                       height={300}
                       className="w-full h-auto object-cover"

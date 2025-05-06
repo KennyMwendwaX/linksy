@@ -1,6 +1,6 @@
-# Linksly - Modern Link Management Platform
+# Linksy - Modern Link Management Platform
 
-![Linksly](https://linksly.vercel.app)
+![Linksy](https://linksy.vercel.app)
 is a modern, full-featured URL shortening and link management platform built with Next.js, React, and TypeScript. It allows users to shorten, customize, and track links with comprehensive analytics.
 
 ## ✨ Features
@@ -48,8 +48,8 @@ Before you begin, ensure you have the following installed:
 
 1. Clone the repository:
    \`\`\`bash
-   git clone https://github.com/KennyMwendwaX/linksly.git
-   cd linksly
+   git clone https://github.com/KennyMwendwaX/linksy.git
+   cd linksy
    \`\`\`
 
 2. Install dependencies:
@@ -71,7 +71,7 @@ Before you begin, ensure you have the following installed:
 
    # Database
 
-   DATABASE_URL=postgresql://username:password@localhost:5432/linksly
+   DATABASE_URL=postgresql://username:password@localhost:5432/linksy
 
    # BetterAuth
 
@@ -92,7 +92,7 @@ Before you begin, ensure you have the following installed:
 
 1. Create a PostgreSQL database:
    \`\`\`bash
-   createdb linksly
+   createdb linksy
    \`\`\`
 
 2. Run database migrations:
@@ -137,7 +137,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 ## 📁 Project Structure
 
 \`\`\`
-linksly/
+linksy/
 ├── app/ # Next.js App Router
 │ ├── api/ # API routes
 │ ├── (auth)/ # Authentication routes
@@ -251,7 +251,7 @@ pnpm test
 
 ### Deploying to Vercel
 
-The easiest way to deploy Linksly is to use the [Vercel Platform](https://vercel.com).
+The easiest way to deploy Linksy is to use the [Vercel Platform](https://vercel.com).
 
 1. Push your code to a GitHub repository
 2. Import the project to Vercel
@@ -292,11 +292,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Built with ❤️ by [Your Name](https://github.com/yourusername)
 
-# Linksly - Modern Link Management Platform
+# Linksy - Modern Link Management Platform
 
-![Linksly](https://via.placeholder.com/1200x630?text=Linksly+-+Modern+Link+Management)
+![Linksy](https://via.placeholder.com/1200x630?text=Linksy+-+Modern+Link+Management)
 
-Linksly is a modern, full-featured URL shortening and link management platform built with Next.js, React, and TypeScript. It allows users to shorten, customize, and track links with comprehensive analytics.
+Linksy is a modern, full-featured URL shortening and link management platform built with Next.js, React, and TypeScript. It allows users to shorten, customize, and track links with comprehensive analytics.
 
 ## ✨ Features
 
@@ -343,8 +343,8 @@ Before you begin, ensure you have the following installed:
 
 1. Clone the repository:
    \`\`\`bash
-   git clone https://github.com/yourusername/linksly.git
-   cd linksly
+   git clone https://github.com/yourusername/linksy.git
+   cd linksy
    \`\`\`
 
 2. Install dependencies:
@@ -366,7 +366,7 @@ Before you begin, ensure you have the following installed:
 
    # Database
 
-   DATABASE_URL=postgresql://username:password@localhost:5432/linksly
+   DATABASE_URL=postgresql://username:password@localhost:5432/linksy
 
    # NextAuth
 
@@ -387,7 +387,7 @@ Before you begin, ensure you have the following installed:
 
 1. Create a PostgreSQL database:
    \`\`\`bash
-   createdb linksly
+   createdb linksy
    \`\`\`
 
 2. Run database migrations:
@@ -432,7 +432,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 ## 📁 Project Structure
 
 \`\`\`
-linksly/
+linksy/
 ├── app/ # Next.js App Router
 │ ├── api/ # API routes
 │ ├── (auth)/ # Authentication routes
@@ -546,7 +546,7 @@ pnpm test
 
 ### Deploying to Vercel
 
-The easiest way to deploy Linksly is to use the [Vercel Platform](https://vercel.com).
+The easiest way to deploy Linksy is to use the [Vercel Platform](https://vercel.com).
 
 1. Push your code to a GitHub repository
 2. Import the project to Vercel

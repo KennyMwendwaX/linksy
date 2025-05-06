@@ -60,7 +60,7 @@ export default function FeaturesSection() {
             Everything You Need in One Platform
           </h2>
           <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">
-            Linksly provides all the tools you need to create, manage, and
+            Linksy provides all the tools you need to create, manage, and
             analyze your links effectively.
           </p>
         </div>

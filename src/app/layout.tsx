@@ -5,9 +5,9 @@ import { ThemeProvider } from "@/app/components/theme-provider";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "Linksly",
+  title: "Linksy",
   description:
-    "Linksly is a link management tool that helps you create beautiful and customizable link pages.",
+    "Linksy is a link management tool that helps you create beautiful and customizable link pages.",
   keywords: [
     "link management",
     "link shortener",
