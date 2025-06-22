@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import TableToolbar from "./table-toolbar";
 import TablePagination from "./table-pagination";
+import { LinkFormDialog } from "../link-form-dialog";
 
 export function LinksTable({
   columns,
@@ -71,7 +72,10 @@ export function LinksTable({
 
   return (
     <>
-      <TableToolbar table={table} />
+      <div className="flex items-center justify-between">
+        <TableToolbar table={table} />
+        <LinkFormDialog />
+      </div>
 
       <div className="overflow-hidden rounded-lg border">
         <Table>
