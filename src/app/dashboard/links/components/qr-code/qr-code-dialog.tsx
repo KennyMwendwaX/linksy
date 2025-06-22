@@ -63,18 +63,20 @@ export function QRCodeDialog({
           <QRCodeGenerator url={shortUrl} size={200} showControls={true} />
 
           <div className="flex items-center space-x-2 p-3 bg-muted rounded-md">
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-mono truncate">{shortUrl}</p>
+            <div className="flex-1 min-w-0 overflow-hidden">
+              <p className="text-sm font-mono break-all">{shortUrl}</p>
             </div>
-            <Button variant="ghost" size="sm" onClick={copyUrl}>
-              <Copy className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => window.open(shortUrl, "_blank")}>
-              <ExternalLink className="h-4 w-4" />
-            </Button>
+            <div className="flex shrink-0 space-x-1">
+              <Button variant="ghost" size="sm" onClick={copyUrl}>
+                <Copy className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => window.open(shortUrl, "_blank")}>
+                <ExternalLink className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {originalUrl && (
@@ -82,7 +84,7 @@ export function QRCodeDialog({
               <p className="text-xs text-muted-foreground mb-1">
                 Original URL:
               </p>
-              <p className="text-xs text-muted-foreground truncate">
+              <p className="text-xs text-muted-foreground break-all overflow-hidden">
                 {originalUrl}
               </p>
             </div>

@@ -38,12 +38,11 @@ export const columns: ColumnDef<Link>[] = [
     accessorKey: "shortUrl",
     header: () => <TableColumnHeader name="Short URL" />,
     cell: ({ row }) => {
-      const shortUrl = `https://${row.original.shortUrl}`;
       return (
         <div className="flex items-center gap-2">
           <span className="font-medium">{row.original.shortUrl}</span>
           <QRCodeDialog
-            shortUrl={shortUrl}
+            shortUrl={row.original.shortUrl}
             originalUrl={row.original.originalUrl}
           />
         </div>
