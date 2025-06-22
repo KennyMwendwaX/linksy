@@ -3,9 +3,10 @@ import { Link, statuses } from "./table-schema";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Copy, QrCode } from "lucide-react";
+import { Copy } from "lucide-react";
 import TableRowActions from "./table-row-actions";
 import TableColumnHeader from "./table-column-header";
+import { QRCodeDialog } from "../qr-code/qr-code-dialog";
 
 export const columns: ColumnDef<Link>[] = [
   {
@@ -54,16 +55,10 @@ export const columns: ColumnDef<Link>[] = [
             title="Copy to clipboard">
             <Copy className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
-            onClick={() => {
-              toast.info("QR Code feature coming soon");
-            }}
-            title="Generate QR code">
-            <QrCode className="h-4 w-4" />
-          </Button>
+          <QRCodeDialog
+            shortUrl={shortUrl}
+            originalUrl={row.original.originalUrl}
+          />
         </div>
       );
     },
