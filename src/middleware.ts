@@ -25,3 +25,22 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: ["/((?!api|trpc|.+\\.[\\w]+$|_next|sign-in|$).*)"],
 };
+
+// import { NextResponse } from "next/server";
+// import type { NextRequest } from "next/server";
+
+// export function middleware(request: NextRequest) {
+//   const url = request.nextUrl.clone();
+//   const { pathname } = url; // Handle /@username pattern
+//   if (pathname.match(/^\/@[^/]+$/)) {
+//     // Extract the username (everything after the @)
+//     const username = pathname.slice(2); // Remove the /@ prefix
+//     // Rewrite to the /profile/username route
+//     url.pathname = `/profile/${username}`;
+//     return NextResponse.rewrite(url);
+//   }
+//   return NextResponse.next();
+// }
+// export const config = {
+//   matcher: ["/@:username*"],
+// };
