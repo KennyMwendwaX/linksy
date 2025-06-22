@@ -1,12 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Link, statuses } from "./table-schema";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { Copy } from "lucide-react";
 import TableRowActions from "./table-row-actions";
 import TableColumnHeader from "./table-column-header";
 import { QRCodeDialog } from "../qr-code/qr-code-dialog";
+import { format } from "date-fns";
 
 export const columns: ColumnDef<Link>[] = [
   {
@@ -44,17 +42,6 @@ export const columns: ColumnDef<Link>[] = [
       return (
         <div className="flex items-center gap-2">
           <span className="font-medium">{row.original.shortUrl}</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
-            onClick={() => {
-              navigator.clipboard.writeText(shortUrl);
-              toast.success("Short URL copied!");
-            }}
-            title="Copy to clipboard">
-            <Copy className="h-4 w-4" />
-          </Button>
           <QRCodeDialog
             shortUrl={shortUrl}
             originalUrl={row.original.originalUrl}
@@ -67,8 +54,11 @@ export const columns: ColumnDef<Link>[] = [
     accessorKey: "createdAt",
     header: () => <TableColumnHeader name="Created At" />,
     cell: ({ row }) => {
-      const date = new Date(row.original.createdAt);
-      return <span>{date.toLocaleDateString()}</span>;
+      const createdAt = format(
+        new Date(row.original.createdAt),
+        "MMM dd, yyyy • HH:mm aa"
+      );
+      return <span>{createdAt}</span>;
     },
   },
   {
