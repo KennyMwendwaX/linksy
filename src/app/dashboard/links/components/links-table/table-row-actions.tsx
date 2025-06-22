@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Copy, MoreHorizontal, Pencil, Trash2, BarChart } from "lucide-react";
 import { Row } from "@tanstack/react-table";
 import { Link } from "./table-schema";
 
@@ -41,6 +41,7 @@ export default function TableRowActions({ row }: TableRowActionsProps) {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => toast.info(`View stats for URL: ${row.original.id}`)}>
+          <BarChart className="mr-2 h-4 w-4" />
           View Stats
         </DropdownMenuItem>
         <DropdownMenuSeparator />
