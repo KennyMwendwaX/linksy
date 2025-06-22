@@ -9,6 +9,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { LinkFormDialog } from "../links/components/link-form-dialog";
 
 export function NavMain({
   items,
@@ -24,12 +25,16 @@ export function NavMain({
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              tooltip="Quick Link Create"
-              className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground">
-              <PlusCircleIcon />
-              <span>New Link</span>
-            </SidebarMenuButton>
+            <LinkFormDialog
+              trigger={
+                <SidebarMenuButton
+                  tooltip="Create New Link"
+                  className="flex items-center justify-center gap-2 min-w-8 rounded-md bg-primary text-primary-foreground px-3 py-2 hover:bg-primary/90 hover:text-primary-foreground">
+                  <PlusCircleIcon className="h-4 w-4" />
+                  <span className="text-sm font-medium">New Link</span>
+                </SidebarMenuButton>
+              }
+            />
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu className="gap-1.5">

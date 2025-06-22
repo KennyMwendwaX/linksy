@@ -11,6 +11,7 @@ export function SiteHeader() {
     { href: "/dashboard", label: "Dashboard" },
     { href: "/dashboard/links", label: "Links" },
     { href: "/dashboard/analytics", label: "Analytics" },
+    { href: "/dashboard/customize", label: "Customize" },
     { href: "/dashboard/settings", label: "Settings" },
   ];
 
