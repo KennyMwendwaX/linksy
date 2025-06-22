@@ -13,7 +13,13 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { LayoutDashboard, Link2, BarChart, Settings } from "lucide-react";
+import {
+  LayoutDashboard,
+  Link2,
+  BarChart,
+  Settings,
+  Brush,
+} from "lucide-react";
 
 const navItems = [
   {
@@ -30,6 +36,11 @@ const navItems = [
     href: "/dashboard/analytics",
     icon: BarChart,
     label: "Analytics",
+  },
+  {
+    href: "/dashboard/customize",
+    icon: Brush,
+    label: "Customize",
   },
   {
     href: "/dashboard/settings",

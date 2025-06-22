@@ -50,7 +50,7 @@ export default function HeroSection() {
 
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
             <Button asChild size="lg">
-              <Link href="/signup">Get Started Free</Link>
+              <Link href="/dashboard">Get Started Free</Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
               <Link href="#features">
