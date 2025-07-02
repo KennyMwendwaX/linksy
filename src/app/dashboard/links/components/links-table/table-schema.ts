@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CheckCircle, PauseCircle, Clock } from "lucide-react"; // Example icons from lucide-react
+import { CheckCircle, PauseCircle, Clock } from "lucide-react";
 import type { ComponentType } from "react";
 
 export const linkSchema = z.object({
@@ -57,7 +57,7 @@ export const linkFormSchema = z
       .string()
       .max(500, "Description must be less than 500 characters")
       .optional(),
-    status: z.enum(["active", "inactive", "expired"]),
+    status: z.enum(["active", "inactive"]),
     expirationDate: z.string().optional(),
     isProtected: z.boolean(),
     password: z.string().optional(),

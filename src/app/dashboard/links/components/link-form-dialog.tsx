@@ -57,7 +57,6 @@ import {
   Settings,
   Tags,
   CheckCircle,
-  Clock,
   XCircle,
   Copy,
   ExternalLink,
@@ -373,21 +372,6 @@ export function LinkFormDialog({ trigger, onSubmit }: LinkFormDialogProps) {
                                           getStatusColor("inactive")
                                         )}>
                                         Disabled
-                                      </Badge>
-                                    </div>
-                                  </div>
-                                </SelectItem>
-                                <SelectItem value="expired">
-                                  <div className="flex items-center gap-2">
-                                    <Clock className="h-4 w-4 text-red-500" />
-                                    <div className="flex items-center gap-2">
-                                      <span>Expired</span>
-                                      <Badge
-                                        variant="outline"
-                                        className={cn(
-                                          getStatusColor("expired")
-                                        )}>
-                                        Expired
                                       </Badge>
                                     </div>
                                   </div>
