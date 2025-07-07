@@ -86,3 +86,16 @@ export const links = pgTable("link", {
     .notNull()
     .references(() => users.id),
 });
+
+export const clickEvents = pgTable("click_event", {
+  id: serial("id").primaryKey(),
+  clickedAt: timestamp("clicked_at", { mode: "date", precision: 3 })
+    .defaultNow()
+    .notNull(),
+  referrer: text("referrer"),
+  ip: text("ip"),
+  userAgent: text("user_agent"),
+  linkId: integer("link_id")
+    .notNull()
+    .references(() => links.id),
+});
