@@ -60,3 +60,29 @@ export const verifications = pgTable("verification", {
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
 });
+
+export const links = pgTable("link", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  originalUrl: text("original_url").notNull(),
+  slug: text("slug").notNull().unique(),
+  clicks: integer("clicks").default(0).notNull(),
+  status: text("status")
+    .$type<"active" | "inactive" | "expired" | "archived">()
+    .notNull(),
+  expirationDate: timestamp("expiration_date"),
+  lastAccessedAt: timestamp("last_accessed_at"),
+  isProtected: boolean("is_protected").default(false).notNull(),
+  password: text("password"),
+  description: text("description"),
+  tags: text("tags").array(),
+  createdAt: timestamp("created_at", { mode: "date", precision: 3 })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date", precision: 3 })
+    .$onUpdate(() => new Date())
+    .notNull(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+});
