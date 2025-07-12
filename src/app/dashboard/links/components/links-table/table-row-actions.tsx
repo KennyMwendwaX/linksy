@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Copy, MoreHorizontal, Pencil, Trash2, BarChart } from "lucide-react";
 import { Row } from "@tanstack/react-table";
-import { Link } from "./table-schema";
+import { Link } from "@/server/database/schema";
 
 type TableRowActionsProps = {
   row: Row<Link>;
@@ -32,7 +32,7 @@ export default function TableRowActions({ row }: TableRowActionsProps) {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
-            const shortUrl = `https://${row.original.shortUrl}`;
+            const shortUrl = `https://${row.original.slug}`;
             navigator.clipboard.writeText(shortUrl);
             toast.success("Short URL copied!");
           }}>

@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Link } from "./table-schema";
+import { Link } from "@/server/database/schema";
 
 interface TableFacetedFilterProps {
   column: Column<Link>;

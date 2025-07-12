@@ -4,7 +4,8 @@ import TableFacetedFilter from "./table-faceted-filter";
 import { Button } from "@/components/ui/button";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { LuSearch } from "react-icons/lu";
-import { Link, statuses } from "./table-schema";
+import { statuses } from "./table-schema";
+import { Link } from "@/server/database/schema";
 
 interface TableToolbarProps {
   table: Table<Link>;

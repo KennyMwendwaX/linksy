@@ -99,3 +99,6 @@ export const clickEvents = pgTable("click_event", {
     .notNull()
     .references(() => links.id),
 });
+
+export type User = typeof users.$inferSelect;
+export type Link = typeof links.$inferSelect;

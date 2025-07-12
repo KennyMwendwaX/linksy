@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "./table-schema";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -27,15 +26,16 @@ import {
 import TableToolbar from "./table-toolbar";
 import TablePagination from "./table-pagination";
 import { LinkFormDialog } from "../link-form-dialog";
+import { Link } from "@/server/database/schema";
 
 export function LinksTable({
   columns,
-  data: initialData,
+  links,
 }: {
   columns: ColumnDef<Link>[];
-  data: Link[];
+  links: Link[];
 }) {
-  const [data] = useState(() => initialData);
+  const [data] = useState(() => links);
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);

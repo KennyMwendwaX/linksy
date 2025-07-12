@@ -9,9 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Link } from "./table-schema";
 import { ChevronsLeftIcon, ChevronsRightIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/server/database/schema";
 
 interface TablePaginationProps {
   table: Table<Link>;

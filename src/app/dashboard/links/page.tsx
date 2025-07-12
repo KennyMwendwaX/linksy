@@ -1,13 +1,17 @@
-"use client";
+import { tryCatch } from "@/lib/try-catch";
+import LinksContent from "./components/links-content";
+import { getUserLinks } from "@/server/actions/links/get";
 
-import { links } from "../data";
-import { LinksTable } from "./components/links-table/table";
-import { columns } from "./components/links-table/table-columns";
+export default async function Links() {
+  const { data: links, error: linksError } = await tryCatch(getUserLinks());
+  if (linksError) {
+    console.error("Failed to fetch links:", linksError);
+    return <div>Error loading links</div>;
+  }
 
-export default function Links() {
   return (
     <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-      <LinksTable data={links} columns={columns} />
+      <LinksContent links={links} />
     </div>
   );
 }
