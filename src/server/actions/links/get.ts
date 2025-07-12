@@ -1,7 +1,9 @@
+"use server";
+
 import { auth } from "@/lib/auth";
 import db from "@/server/database";
 import { links } from "@/server/database/schema";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 export const getUserLinks = async () => {
@@ -25,5 +27,35 @@ export const getUserLinks = async () => {
   } catch (error) {
     console.error("Error fetching links:", error);
     throw new Error("Failed to fetch links");
+  }
+};
+
+export const getUserLink = async (linkId: string) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      throw new Error("No active session found");
+    }
+
+    const userId = session.user.id;
+
+    const link = await db.query.links.findFirst({
+      where: and(
+        eq(links.id, parseInt(linkId)),
+        eq(links.userId, parseInt(userId))
+      ),
+    });
+
+    if (!link) {
+      throw new Error("Link not found");
+    }
+
+    return link;
+  } catch (error) {
+    console.error("Error fetching link:", error);
+    throw new Error("Failed to fetch link");
   }
 };
