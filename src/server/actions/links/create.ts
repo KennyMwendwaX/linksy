@@ -8,10 +8,7 @@ import db from "@/server/database";
 import { eq } from "drizzle-orm";
 import { links } from "@/server/database/schema";
 
-export const createLink = async (
-  userId: string,
-  linkFormData: LinkFormData
-) => {
+export const createLink = async (linkFormData: LinkFormData) => {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -19,10 +16,6 @@ export const createLink = async (
 
     if (!session) {
       throw new Error("No active session found");
-    }
-
-    if (!userId || userId !== session.user.id) {
-      throw new Error("User ID mismatch");
     }
 
     const slug = linkFormData.customSlug || nanoid(8);
@@ -51,11 +44,15 @@ export const createLink = async (
           ? linkFormData.password || null
           : null,
         tags: linkFormData.tags || [],
-        userId: parseInt(userId),
+        userId: parseInt(session.user.id, 10),
       })
       .returning();
 
-    return newLink;
+    if (!newLink) {
+      throw new Error("Failed to create link");
+    }
+
+    return { success: true };
   } catch (error) {
     console.error("Error creating link:", error);
     throw new Error("Failed to create link");

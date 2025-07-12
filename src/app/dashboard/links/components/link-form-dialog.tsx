@@ -58,8 +58,6 @@ import {
   Tags,
   CheckCircle,
   XCircle,
-  Copy,
-  ExternalLink,
   Shield,
   Lock,
   Unlock,
@@ -72,17 +70,21 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { linkFormSchema, type LinkFormData } from "./links-table/table-schema";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { createLink } from "@/server/actions/links/create";
+import { tryCatch } from "@/lib/try-catch";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface LinkFormDialogProps {
   trigger?: React.ReactNode;
-  onSubmit?: (data: LinkFormData) => void | Promise<void>;
 }
 
-export function LinkFormDialog({ trigger, onSubmit }: LinkFormDialogProps) {
+export function LinkFormDialog({ trigger }: LinkFormDialogProps) {
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm<LinkFormData>({
     resolver: zodResolver(linkFormSchema),
@@ -95,16 +97,25 @@ export function LinkFormDialog({ trigger, onSubmit }: LinkFormDialogProps) {
 
   const isProtected = form.watch("isProtected");
   const tags = form.watch("tags") || [];
-  const originalUrl = form.watch("originalUrl");
-  const customSlug = form.watch("customSlug");
 
   const handleSubmit = (data: LinkFormData) => {
     startTransition(async () => {
       try {
-        await onSubmit?.(data);
-        setOpen(false);
-        form.reset();
-        setTagInput("");
+        const { data: success, error: createLinkError } = await tryCatch(
+          createLink(data)
+        );
+        if (createLinkError) {
+          toast.error(createLinkError.message);
+          return;
+        }
+
+        if (success) {
+          toast.success("Link created successfully!");
+          setTagInput("");
+          form.reset();
+          setOpen(false);
+          router.refresh();
+        }
       } catch (error) {
         console.error("Failed to submit form:", error);
       }
@@ -139,12 +150,6 @@ export function LinkFormDialog({ trigger, onSubmit }: LinkFormDialogProps) {
     }
   };
 
-  const generatePreview = () => {
-    if (!originalUrl) return null;
-    const slug = customSlug || "abc123";
-    return `short.ly/${slug}`;
-  };
-
   const defaultTrigger = (
     <Button className="gap-2">
       <Plus className="h-4 w-4" />
@@ -168,45 +173,6 @@ export function LinkFormDialog({ trigger, onSubmit }: LinkFormDialogProps) {
             </DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {/* Live Preview */}
-            {originalUrl && (
-              <div className="p-4 bg-muted/30 rounded-lg border">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                      <ExternalLink className="h-4 w-4 text-blue-600" />
-                      Live Preview
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <code className="px-2 py-1 bg-background rounded text-sm font-mono border">
-                        {generatePreview()}
-                      </code>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 w-6 p-0">
-                            <Copy className="h-3 w-3 text-blue-600" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Copy link</TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </div>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="sm" className="gap-1">
-                        <ExternalLink className="h-3 w-3" />
-                        Test
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Test the link</TooltipContent>
-                  </Tooltip>
-                </div>
-              </div>
-            )}
-
             <Card>
               <CardHeader>
                 <CardTitle>Link Details</CardTitle>
