@@ -6,9 +6,10 @@ import TableColumnHeader from "./table-column-header";
 import { QRCodeDialog } from "../qr-code/qr-code-dialog";
 import { format } from "date-fns";
 import { Shield } from "lucide-react";
-import { Link } from "@/server/database/schema";
+import { Link as LinkType } from "@/server/database/schema";
+import Link from "next/link";
 
-export const linksTableColumns: ColumnDef<Link>[] = [
+export const linksTableColumns: ColumnDef<LinkType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -35,21 +36,17 @@ export const linksTableColumns: ColumnDef<Link>[] = [
     accessorKey: "name",
     header: () => <TableColumnHeader name="Link Name" />,
     cell: ({ row }) => (
-      <div className="flex flex-col">
+      <Link
+        href={`/dashboard/links/${row.original.id}`}
+        className="hover:underline">
         <span className="font-medium">{row.original.name}</span>
-        {row.original.description && (
-          <span className="text-sm text-muted-foreground truncate max-w-xs">
-            {row.original.description}
-          </span>
-        )}
-      </div>
+      </Link>
     ),
   },
   {
     accessorKey: "slug",
     header: () => <TableColumnHeader name="Short URL" />,
     cell: ({ row }) => {
-      // Construct short URL from slug - adjust domain as needed
       const shortUrl = `https://yourdomain.com/${row.original.slug}`;
       return (
         <div className="flex items-center gap-2">

@@ -371,7 +371,7 @@ export function LinkFormDialog({ trigger }: LinkFormDialogProps) {
                                       !field.value && "text-muted-foreground"
                                     )}>
                                     {field.value ? (
-                                      format(new Date(field.value), "PPP")
+                                      format(field.value, "PPP")
                                     ) : (
                                       <span>Pick a date</span>
                                     )}
@@ -389,11 +389,9 @@ export function LinkFormDialog({ trigger }: LinkFormDialogProps) {
                                       ? new Date(field.value)
                                       : undefined
                                   }
-                                  onSelect={(date) =>
-                                    field.onChange(date?.toISOString())
-                                  }
+                                  onSelect={field.onChange}
                                   disabled={(date) => date < new Date()}
-                                  initialFocus
+                                  captionLayout="dropdown"
                                 />
                               </PopoverContent>
                             </Popover>
