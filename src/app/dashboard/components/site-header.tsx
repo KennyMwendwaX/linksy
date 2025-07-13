@@ -3,20 +3,27 @@
 import { usePathname } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { usePageTitle } from "../providers/page-title-provider";
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const { dynamicTitle } = usePageTitle();
 
-  const links = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/dashboard/links", label: "Links" },
-    { href: "/dashboard/analytics", label: "Analytics" },
-    { href: "/dashboard/customize", label: "Customize" },
-    { href: "/dashboard/settings", label: "Settings" },
-  ];
+  const getPageTitle = (path: string) => {
+    if (path.startsWith("/dashboard/links")) {
+      const segments = path.split("/");
+      if (segments.length > 3) {
+        return dynamicTitle || "Link Details";
+      }
+      return "Links";
+    }
+    if (path.startsWith("/dashboard/analytics")) return "Analytics";
+    if (path.startsWith("/dashboard/customize")) return "Customize";
+    if (path.startsWith("/dashboard/settings")) return "Settings";
+    return "Dashboard";
+  };
 
-  const currentPage =
-    links.find((link) => pathname === link.href)?.label ?? "Dashboard";
+  const currentPage = getPageTitle(pathname);
 
   return (
     <header className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">
