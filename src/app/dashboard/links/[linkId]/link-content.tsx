@@ -232,7 +232,7 @@ export default function LinkPage({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Link Details</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Link Details</h1>
           <p className="text-muted-foreground">
             Manage and analyze your shortened link performance
           </p>
@@ -263,13 +263,13 @@ export default function LinkPage({
 
       {/* Link Overview Card */}
       <Card className="overflow-hidden border-0 shadow-lg">
-        <CardContent className="p-8">
+        <CardContent className="px-6">
           <div className="space-y-6">
             {/* Link Title and Status */}
             <div className="flex items-start justify-between">
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-2xl font-bold">{link.name}</h2>
+                  <h2 className="text-xl font-bold">{link.name}</h2>
                   <Badge className={`${getStatusColor(link.status)} border`}>
                     {link.status}
                   </Badge>
