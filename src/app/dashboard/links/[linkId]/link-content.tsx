@@ -89,6 +89,9 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import type { Link as LinkType } from "@/server/database/schema";
 import { usePageTitle } from "../../providers/page-title-provider";
+import { LinkFormData } from "@/lib/link-schema";
+import { tryCatch } from "@/lib/try-catch";
+import { updateLink } from "@/server/actions/links/update";
 
 type Props = {
   link: LinkType;
@@ -117,6 +120,7 @@ export default function LinkPage({
 
   const form = useForm({
     defaultValues: {
+      originalUrl: link.originalUrl,
       name: link.name,
       customSlug: link.slug,
       description: link.description || "",
@@ -187,12 +191,22 @@ export default function LinkPage({
       (1000 * 60 * 60 * 24)
   );
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (data: LinkFormData) => {
     startTransition(async () => {
       try {
-        // Add your update logic here
-        toast.success("Link updated successfully!");
-        router.refresh();
+        const { data: success, error: updateLinkError } = await tryCatch(
+          updateLink(link.id, data)
+        );
+        if (updateLinkError) {
+          toast.error(updateLinkError.message);
+          return;
+        }
+
+        if (success) {
+          form.reset();
+          toast.success("Link updated successfully!");
+          router.refresh();
+        }
       } catch (error) {
         console.error("Failed to update link:", error);
         toast.error("Failed to update link");
@@ -582,6 +596,33 @@ export default function LinkPage({
                   <form
                     onSubmit={form.handleSubmit(handleFormSubmit)}
                     className="space-y-6">
+                    {/* Primary URL Field */}
+                    <FormField
+                      control={form.control}
+                      name="originalUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <Globe className="h-4 w-4 text-blue-600" />
+                            Original URL
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://example.com/very/long/url"
+                              type="url"
+                              className="focus-visible:ring-2 focus-visible:ring-ring h-10"
+                              {...field}
+                              required
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            The URL you want to shorten
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
                     {/* Basic Information Grid */}
                     <div className="grid md:grid-cols-2 gap-6">
                       <FormField
@@ -1058,9 +1099,11 @@ export default function LinkPage({
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Target className="h-4 w-4" />
-                <span className="text-sm font-medium">Link ID</span>
+                <span className="text-sm font-medium">Expires At</span>
               </div>
-              <p className="text-sm font-mono">{link.id}</p>
+              <p className="text-sm font-mono">
+                {formatDate(link.expirationDate) || "Never"}
+              </p>
             </div>
           </div>
         </CardContent>

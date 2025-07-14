@@ -8,7 +8,7 @@ import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 export const updateLink = async (
-  linkId: string,
+  linkId: number,
   linkFormData: LinkFormData
 ) => {
   try {
@@ -23,7 +23,7 @@ export const updateLink = async (
     const userId = parseInt(session.user.id, 10);
 
     const existingLink = await db.query.links.findFirst({
-      where: eq(links.id, parseInt(linkId)),
+      where: eq(links.id, linkId),
     });
 
     if (!existingLink) {
@@ -37,10 +37,10 @@ export const updateLink = async (
     const slug = linkFormData.customSlug || existingLink.slug;
 
     const existingSlug = await db.query.links.findFirst({
-      where: and(eq(links.slug, slug), eq(links.id, parseInt(linkId))),
+      where: and(eq(links.slug, slug), eq(links.id, linkId)),
     });
 
-    if (existingSlug && existingSlug.id !== parseInt(linkId)) {
+    if (existingSlug && existingSlug.id !== linkId) {
       throw new Error("Slug already in use. Please choose another.");
     }
 
@@ -61,7 +61,7 @@ export const updateLink = async (
           : null,
         tags: linkFormData.tags || [],
       })
-      .where(eq(links.id, parseInt(linkId)))
+      .where(eq(links.id, linkId))
       .returning();
 
     if (!updatedLink) {

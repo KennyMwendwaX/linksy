@@ -101,8 +101,14 @@ export function LinkFormDialog({ trigger }: LinkFormDialogProps) {
   const handleSubmit = (data: LinkFormData) => {
     startTransition(async () => {
       try {
+        const formattedData = {
+          ...data,
+          expirationDate: data.expirationDate
+            ? new Date(data.expirationDate)
+            : undefined,
+        };
         const { data: success, error: createLinkError } = await tryCatch(
-          createLink(data)
+          createLink(formattedData)
         );
         if (createLinkError) {
           toast.error(createLinkError.message);
