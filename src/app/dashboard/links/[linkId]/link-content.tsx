@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import {
   Copy,
   ExternalLink,
@@ -38,6 +38,9 @@ import { usePageTitle } from "../../providers/page-title-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import UpdateLinkForm from "./update-link-form";
 import StatCards from "./stat-cards";
+import { tryCatch } from "@/lib/try-catch";
+import { deleteLink } from "@/server/actions/links/delete";
+import { useRouter } from "next/navigation";
 
 type Props = {
   link: LinkType;
@@ -53,6 +56,8 @@ export default function LinkPage({
   const [activeTab, setActiveTab] = useState("overview");
   const [, setCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [, startTransition] = useTransition();
+  const router = useRouter();
   const { setDynamicTitle } = usePageTitle();
 
   setDynamicTitle(link.name);
@@ -97,6 +102,28 @@ export default function LinkPage({
     });
   };
 
+  const handleDelete = () => {
+    startTransition(async () => {
+      try {
+        const { data: success, error: deleteLinkError } = await tryCatch(
+          deleteLink(link.slug)
+        );
+        if (deleteLinkError) {
+          toast.error(deleteLinkError.message);
+          return;
+        }
+
+        if (success) {
+          toast.success("Link deleted successfully!");
+          router.replace("/dashboard/links");
+        }
+      } catch (error) {
+        console.error("Failed to delete link:", error);
+        toast.error("Failed to delete link");
+      }
+    });
+  };
+
   return (
     <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
       {/* Header */}
@@ -123,7 +150,9 @@ export default function LinkPage({
               Archive
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem
+              onClick={() => handleDelete()}
+              className="text-destructive">
               <Trash2 className="mr-2 h-4 w-4" />
               Delete
             </DropdownMenuItem>
