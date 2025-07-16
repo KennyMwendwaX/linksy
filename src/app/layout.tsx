@@ -26,6 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${GeistSans.className} antialiased`}>
+        <script src="https://unpkg.com/react-scan/dist/auto.global.js" defer />
+
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
