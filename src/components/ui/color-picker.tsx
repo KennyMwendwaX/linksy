@@ -68,7 +68,8 @@ export interface ColorPickerProps {
 }
 
 export const ColorPicker = memo<
-  ColorPickerProps & Omit<HTMLAttributes<HTMLDivElement>, "defaultValue">
+  ColorPickerProps &
+    Omit<HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange">
 >(
   ({
     value,
@@ -80,6 +81,10 @@ export const ColorPicker = memo<
   }) => {
     const selectedColor = useMemo(() => (value ? Color(value) : null), [value]);
     const defaultColor = useMemo(() => Color(defaultValue), [defaultValue]);
+
+    // Use refs to track if we're in a controlled update to prevent loops
+    const isControlledUpdate = useRef(false);
+    const lastEmittedValue = useRef<string | null>(null);
 
     const [hue, setHue] = useState<number>(
       selectedColor?.hue() || defaultColor.hue() || 0
@@ -95,46 +100,68 @@ export const ColorPicker = memo<
     );
     const [mode, setMode] = useState<ColorMode>("hex");
 
-    // Memoize callbacks to prevent unnecessary re-renders
-    const handleSetHue = useCallback((hue: number) => setHue(hue), []);
-    const handleSetSaturation = useCallback(
-      (saturation: number) => setSaturation(saturation),
-      []
-    );
-    const handleSetLightness = useCallback(
-      (lightness: number) => setLightness(lightness),
-      []
-    );
-    const handleSetAlpha = useCallback((alpha: number) => setAlpha(alpha), []);
-    const handleSetMode = useCallback((mode: ColorMode) => setMode(mode), []);
+    // Stable onChange callback that doesn't change on every render
+    const onChangeRef = useRef(onChange);
+    onChangeRef.current = onChange;
 
-    // Update color when controlled value changes
+    // Memoize callbacks to prevent unnecessary re-renders
+    const handleSetHue = useCallback((newHue: number) => {
+      setHue(newHue);
+    }, []);
+
+    const handleSetSaturation = useCallback((newSaturation: number) => {
+      setSaturation(newSaturation);
+    }, []);
+
+    const handleSetLightness = useCallback((newLightness: number) => {
+      setLightness(newLightness);
+    }, []);
+
+    const handleSetAlpha = useCallback((newAlpha: number) => {
+      setAlpha(newAlpha);
+    }, []);
+
+    const handleSetMode = useCallback((newMode: ColorMode) => {
+      setMode(newMode);
+    }, []);
+
+    // Update internal state when controlled value changes
     useEffect(() => {
-      if (value) {
+      if (value && !isControlledUpdate.current) {
         const color = Color(value);
-        setHue(color.hue() || 0);
-        setSaturation(color.saturationl() || 0);
-        setLightness(color.lightness() || 0);
-        setAlpha((color.alpha() || 1) * 100);
+        const colorString = color.hex();
+
+        // Only update if the color actually changed
+        if (lastEmittedValue.current !== colorString) {
+          setHue(color.hue() || 0);
+          setSaturation(color.saturationl() || 0);
+          setLightness(color.lightness() || 0);
+          setAlpha((color.alpha() || 1) * 100);
+        }
       }
     }, [value]);
 
-    // Memoize the onChange callback to prevent unnecessary re-renders
-    const handleChange = useCallback(
-      (h: number, s: number, l: number, a: number) => {
-        if (onChange) {
-          const color = Color.hsl(h, s, l).alpha(a / 100);
-          const rgba = color.rgb().array();
-          onChange([rgba[0], rgba[1], rgba[2], a / 100]);
-        }
-      },
-      [onChange]
-    );
-
-    // Notify parent of changes
+    // Emit changes to parent - use a separate effect to avoid circular dependencies
     useEffect(() => {
-      handleChange(hue, saturation, lightness, alpha);
-    }, [hue, saturation, lightness, alpha, handleChange]);
+      if (onChangeRef.current && !isControlledUpdate.current) {
+        const color = Color.hsl(hue, saturation, lightness).alpha(alpha / 100);
+        const colorString = color.hex();
+
+        // Only emit if the color actually changed
+        if (lastEmittedValue.current !== colorString) {
+          lastEmittedValue.current = colorString;
+          isControlledUpdate.current = true;
+
+          const rgba = color.rgb().array();
+          onChangeRef.current([rgba[0], rgba[1], rgba[2], alpha / 100]);
+
+          // Reset the flag after a microtask to allow the parent to update
+          Promise.resolve().then(() => {
+            isControlledUpdate.current = false;
+          });
+        }
+      }
+    }, [hue, saturation, lightness, alpha]);
 
     const contextValue = useMemo<ColorPickerContextValue>(
       () => ({
@@ -179,16 +206,12 @@ export const ColorPickerSelection = memo<HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState<boolean>(false);
-    const [positionX, setPositionX] = useState<number>(0);
-    const [positionY, setPositionY] = useState<number>(0);
     const { hue, saturation, lightness, setSaturation, setLightness } =
       useColorPicker();
 
-    // Set initial position based on current color
-    useEffect(() => {
-      setPositionX(saturation / 100);
-      setPositionY(1 - lightness / 100);
-    }, [saturation, lightness]);
+    // Calculate position from saturation and lightness
+    const positionX = useMemo(() => saturation / 100, [saturation]);
+    const positionY = useMemo(() => 1 - lightness / 100, [lightness]);
 
     const backgroundGradient = useMemo(() => {
       return `linear-gradient(to bottom, transparent, black),
@@ -212,8 +235,6 @@ export const ColorPickerSelection = memo<HTMLAttributes<HTMLDivElement>>(
           Math.min(1, (event.clientY - rect.top) / rect.height)
         );
 
-        setPositionX(x);
-        setPositionY(y);
         setSaturation(x * 100);
         setLightness((1 - y) * 100);
       },
@@ -588,3 +609,39 @@ export const ColorPickerPreview = memo<HTMLAttributes<HTMLDivElement>>(
   }
 );
 ColorPickerPreview.displayName = "ColorPickerPreview";
+
+// Usage example with proper debouncing
+/* 
+const [color, setColor] = useState<RGBAValue>([255, 0, 0, 1]);
+
+// Debounce the color change handler to prevent excessive updates
+const debouncedSetColor = useMemo(
+  () => debounce((newColor: RGBAValue) => {
+    setColor(newColor);
+  }, 16), // ~60fps
+  []
+);
+
+const handleColorChange = useCallback((value: RGBAValue) => {
+  debouncedSetColor(value);
+}, [debouncedSetColor]);
+
+<ColorPicker
+  className="max-w-md rounded-lg border bg-card p-4 shadow-sm"
+  value={color}
+  onChange={handleColorChange}>
+  <ColorPickerSelection />
+  <div className="flex items-center gap-2">
+    <ColorPickerEyeDropper />
+    <ColorPickerPreview />
+    <div className="grid w-full gap-2">
+      <ColorPickerHue />
+      <ColorPickerAlpha />
+    </div>
+  </div>
+  <div className="flex items-center gap-2">
+    <ColorPickerOutput />
+    <ColorPickerFormat />
+  </div>
+</ColorPicker>
+*/

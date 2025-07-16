@@ -10,16 +10,28 @@ import {
   ColorPickerPreview,
   ColorPickerSelection,
 } from "@/components/ui/color-picker";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { debounce } from "lodash";
 
 type RGBAValue = [number, number, number, number];
 
 export default function Customize() {
   const [color, setColor] = useState<RGBAValue>([255, 0, 0, 1]);
+  // Debounce the color change handler to prevent excessive updates
+  const debouncedSetColor = useMemo(
+    () =>
+      debounce((newColor: RGBAValue) => {
+        setColor(newColor);
+      }, 16), // ~60fps
+    []
+  );
 
-  const handleColorChange = (value: RGBAValue) => {
-    setColor(value);
-  };
+  const handleColorChange = useCallback(
+    (value: RGBAValue) => {
+      debouncedSetColor(value);
+    },
+    [debouncedSetColor]
+  );
 
   return (
     <div className="space-y-4">
