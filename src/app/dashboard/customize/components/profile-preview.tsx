@@ -36,14 +36,14 @@ export default function ProfilePreview({
     .sort((a, b) => a.order - b.order);
 
   return (
-    <div className="lg:sticky lg:top-6">
+    <div className="lg:sticky lg:top-6 lg:self-start lg:max-h-screen lg:overflow-y-auto">
       <Card>
         <CardHeader>
           <CardTitle>Live Preview</CardTitle>
         </CardHeader>
         <CardContent>
           <div
-            className="rounded-lg border p-6 space-y-4 min-h-[500px]"
+            className="rounded-lg border p-6 space-y-4 min-h-[500px] max-h-[600px] overflow-y-auto"
             style={{
               ...backgroundStyle,
               color: theme.textColor,
@@ -86,7 +86,7 @@ export default function ProfilePreview({
                 </a>
               ))}
             </div>
-          </div>{" "}
+          </div>
         </CardContent>
       </Card>
     </div>

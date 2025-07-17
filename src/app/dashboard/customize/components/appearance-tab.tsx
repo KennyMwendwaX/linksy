@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { VscColorMode } from "react-icons/vsc";
-import { Label } from "recharts";
+import { Label } from "@/components/ui/label";
 import { ColorButton, ColorPickerModal } from "./color-picker-modal";
 import { RGBAValue, ThemeColors } from "@/lib/types";
 

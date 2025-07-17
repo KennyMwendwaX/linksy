@@ -209,76 +209,78 @@ export default function ProfileCustomization() {
   }, []);
 
   return (
-    <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Customize Your Profile</h1>
-        <p className="text-muted-foreground">
-          Personalize your public profile page with colors, content, and link
-          organization.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Customization Form */}
-        <div className="space-y-6">
-          <Tabs defaultValue="appearance" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="appearance" className="gap-2">
-                <Palette className="w-4 h-4" />
-                Appearance
-              </TabsTrigger>
-              <TabsTrigger value="profile" className="gap-2">
-                <User className="w-4 h-4" />
-                Profile
-              </TabsTrigger>
-              <TabsTrigger value="links" className="gap-2">
-                <Link2 className="w-4 h-4" />
-                Links
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="appearance" className="space-y-6">
-              <AppearanceTab
-                theme={theme}
-                handleGradientToggle={handleGradientToggle}
-                handleGradientTypeChange={handleGradientTypeChange}
-                handleGradientDirectionChange={handleGradientDirectionChange}
-                handleGradientColorChange={handleGradientColorChange}
-                handleBackgroundChange={handleBackgroundChange}
-                handleButtonPrimaryChange={handleButtonPrimaryChange}
-                handleButtonSecondaryChange={handleButtonSecondaryChange}
-                handleLinkColorChange={handleLinkColorChange}
-                handleTextColorChange={handleTextColorChange}
-                linearDirections={linearDirections}
-                radialPositions={radialPositions}
-              />
-            </TabsContent>
-
-            <TabsContent value="profile" className="space-y-6">
-              <ProfileTab profile={profile} setProfile={setProfile} />
-            </TabsContent>
-
-            <TabsContent value="links" className="space-y-6">
-              <LinksTab
-                links={links}
-                handleAddLink={handleAddLink}
-                handleLinkUpdate={handleLinkUpdate}
-                handleLinkDelete={handleLinkDelete}
-              />
-            </TabsContent>
-          </Tabs>
-
-          <div className="flex gap-3">
-            <Button onClick={handleSave} className="flex-1">
-              Save Changes
-            </Button>
-            <Button onClick={handleReset} variant="outline">
-              Reset All
-            </Button>
-          </div>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 lg:px-6 py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold mb-2">Customize Your Profile</h1>
+          <p className="text-muted-foreground">
+            Personalize your public profile page with colors, content, and link
+            organization.
+          </p>
         </div>
 
-        <ProfilePreview theme={theme} profile={profile} links={links} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-start">
+          {/* Customization Form */}
+          <div className="space-y-6">
+            <Tabs defaultValue="appearance" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="appearance" className="gap-2">
+                  <Palette className="w-4 h-4" />
+                  Appearance
+                </TabsTrigger>
+                <TabsTrigger value="profile" className="gap-2">
+                  <User className="w-4 h-4" />
+                  Profile
+                </TabsTrigger>
+                <TabsTrigger value="links" className="gap-2">
+                  <Link2 className="w-4 h-4" />
+                  Links
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="appearance" className="space-y-6">
+                <AppearanceTab
+                  theme={theme}
+                  handleGradientToggle={handleGradientToggle}
+                  handleGradientTypeChange={handleGradientTypeChange}
+                  handleGradientDirectionChange={handleGradientDirectionChange}
+                  handleGradientColorChange={handleGradientColorChange}
+                  handleBackgroundChange={handleBackgroundChange}
+                  handleButtonPrimaryChange={handleButtonPrimaryChange}
+                  handleButtonSecondaryChange={handleButtonSecondaryChange}
+                  handleLinkColorChange={handleLinkColorChange}
+                  handleTextColorChange={handleTextColorChange}
+                  linearDirections={linearDirections}
+                  radialPositions={radialPositions}
+                />
+              </TabsContent>
+
+              <TabsContent value="profile" className="space-y-6">
+                <ProfileTab profile={profile} setProfile={setProfile} />
+              </TabsContent>
+
+              <TabsContent value="links" className="space-y-6">
+                <LinksTab
+                  links={links}
+                  handleAddLink={handleAddLink}
+                  handleLinkUpdate={handleLinkUpdate}
+                  handleLinkDelete={handleLinkDelete}
+                />
+              </TabsContent>
+            </Tabs>
+
+            <div className="flex gap-3">
+              <Button onClick={handleSave} className="flex-1">
+                Save Changes
+              </Button>
+              <Button onClick={handleReset} variant="outline">
+                Reset All
+              </Button>
+            </div>
+          </div>
+
+          <ProfilePreview theme={theme} profile={profile} links={links} />
+        </div>
       </div>
     </div>
   );
