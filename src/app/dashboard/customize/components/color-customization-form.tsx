@@ -9,13 +9,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -35,6 +28,13 @@ import {
   ColorPickerPreview,
   ColorPickerSelection,
 } from "@/components/ui/color-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type RGBAValue = [number, number, number, number];
 
@@ -132,15 +132,6 @@ const defaultLinks: LinkItem[] = [
   },
 ];
 
-const gradientDirections = [
-  { label: "To Bottom Right", value: "to bottom right" },
-  { label: "To Right", value: "to right" },
-  { label: "To Bottom", value: "to bottom" },
-  { label: "To Top Right", value: "to top right" },
-  { label: "45deg", value: "45deg" },
-  { label: "90deg", value: "90deg" },
-];
-
 const rgbaToHex = (rgba: RGBAValue): string => {
   const [r, g, b, a] = rgba;
   const hex = (
@@ -155,24 +146,14 @@ const rgbaToHex = (rgba: RGBAValue): string => {
 };
 
 // Reusable Color Button Component
-const ColorButton = ({
-  color,
-  label,
-  onClick,
-}: {
-  color: string;
-  label: string;
-  onClick: () => void;
-}) => (
-  <button
-    onClick={onClick}
-    className="flex items-center gap-2 p-2 rounded-lg border hover:bg-gray-50 transition-colors w-full text-left">
+const ColorButton = ({ color, label }: { color: string; label: string }) => (
+  <Button variant="secondary" className="flex items-center gap-2 w-full">
     <div
       className="w-6 h-6 rounded border"
       style={{ backgroundColor: color }}
     />
     <span className="text-sm">{label}</span>
-  </button>
+  </Button>
 );
 
 // Single Color Picker Modal
@@ -240,11 +221,21 @@ const ProfilePreview = ({
   profile: ProfileData;
   links: LinkItem[];
 }) => {
+  console.log("Rendering ProfilePreview with theme:", theme);
+
   const backgroundStyle = useMemo(() => {
     if (theme.backgroundGradient?.enabled) {
       const { type, direction, colors } = theme.backgroundGradient;
+      const gradientType =
+        type === "linear" ? "linear-gradient" : "radial-gradient";
+
+      const gradientDirection =
+        type === "linear" ? direction : `circle at ${direction}`;
+
       return {
-        background: `${type}-gradient(${direction}, ${colors.join(", ")})`,
+        background: `${gradientType}(${gradientDirection}, ${colors.join(
+          ", "
+        )})`,
       };
     }
     return { backgroundColor: theme.background };
@@ -272,15 +263,15 @@ const ProfilePreview = ({
 
       <div className="space-y-3">
         {visibleLinks.slice(0, 2).map((link) => (
-          <Button
+          <button
             key={link.id}
-            className="w-full text-white"
+            className="w-full text-white rounded p-2"
             style={{
               backgroundColor:
                 link.order === 1 ? theme.buttonPrimary : theme.buttonSecondary,
             }}>
             {link.icon} {link.title}
-          </Button>
+          </button>
         ))}
       </div>
 
@@ -350,6 +341,19 @@ const LinkOrderItem = ({
   );
 };
 
+const linearDirections = [
+  { value: "to right", label: "Left to Right" },
+  { value: "to bottom", label: "Top to Bottom" },
+  { value: "90deg", label: "90°" },
+];
+
+const radialPositions = [
+  { value: "center", label: "Center" },
+  { value: "top", label: "Top" },
+  { value: "bottom", label: "Bottom" },
+  { value: "top left", label: "Top Left" },
+];
+
 export default function ColorCustomizationForm() {
   const [theme, setTheme] = useState<ThemeColors>(defaultTheme);
   const [profile, setProfile] = useState<ProfileData>(defaultProfile);
@@ -374,22 +378,6 @@ export default function ColorCustomizationForm() {
     []
   );
 
-  const handleButtonPrimaryChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({ ...prev, buttonPrimary: rgbaToHex(color) }));
-  }, []);
-
-  const handleButtonSecondaryChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({ ...prev, buttonSecondary: rgbaToHex(color) }));
-  }, []);
-
-  const handleLinkColorChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({ ...prev, linkColor: rgbaToHex(color) }));
-  }, []);
-
-  const handleTextColorChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({ ...prev, textColor: rgbaToHex(color) }));
-  }, []);
-
   const handleGradientToggle = useCallback((enabled: boolean) => {
     setTheme((prev) => ({
       ...prev,
@@ -406,6 +394,7 @@ export default function ColorCustomizationForm() {
       backgroundGradient: {
         ...prev.backgroundGradient!,
         type,
+        direction: type === "linear" ? "to right" : "center",
       },
     }));
   }, []);
@@ -418,6 +407,22 @@ export default function ColorCustomizationForm() {
         direction,
       },
     }));
+  }, []);
+
+  const handleButtonPrimaryChange = useCallback((color: RGBAValue) => {
+    setTheme((prev) => ({ ...prev, buttonPrimary: rgbaToHex(color) }));
+  }, []);
+
+  const handleButtonSecondaryChange = useCallback((color: RGBAValue) => {
+    setTheme((prev) => ({ ...prev, buttonSecondary: rgbaToHex(color) }));
+  }, []);
+
+  const handleLinkColorChange = useCallback((color: RGBAValue) => {
+    setTheme((prev) => ({ ...prev, linkColor: rgbaToHex(color) }));
+  }, []);
+
+  const handleTextColorChange = useCallback((color: RGBAValue) => {
+    setTheme((prev) => ({ ...prev, textColor: rgbaToHex(color) }));
   }, []);
 
   const handleLinkUpdate = useCallback(
@@ -504,14 +509,14 @@ export default function ColorCustomizationForm() {
                   </div>
 
                   {theme.backgroundGradient?.enabled ? (
-                    <div className="space-y-4">
+                    <>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <Label>Gradient Type</Label>
+                          <Label className="mb-2">Gradient Type</Label>
                           <Select
                             value={theme.backgroundGradient.type}
                             onValueChange={handleGradientTypeChange}>
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -521,15 +526,18 @@ export default function ColorCustomizationForm() {
                           </Select>
                         </div>
                         <div>
-                          <Label>Direction</Label>
+                          <Label className="mb-2">Direction / Position</Label>
                           <Select
                             value={theme.backgroundGradient.direction}
                             onValueChange={handleGradientDirectionChange}>
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
-                              {gradientDirections.map((dir) => (
+                            <SelectContent key={theme.backgroundGradient.type}>
+                              {(theme.backgroundGradient.type === "linear"
+                                ? linearDirections
+                                : radialPositions
+                              ).map((dir) => (
                                 <SelectItem key={dir.value} value={dir.value}>
                                   {dir.label}
                                 </SelectItem>
@@ -540,58 +548,40 @@ export default function ColorCustomizationForm() {
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label className="text-sm font-medium mb-2 block">
-                            First Color
-                          </Label>
-                          <ColorPickerModal
-                            title="First Gradient Color"
-                            value={theme.backgroundGradient.colors[0]}
-                            onChange={(color) =>
-                              handleGradientColorChange(0, color)
-                            }>
-                            <ColorButton
-                              color={theme.backgroundGradient.colors[0]}
-                              label="First Color"
-                              onClick={() => {}}
-                            />
-                          </ColorPickerModal>
-                        </div>
-                        <div>
-                          <Label className="text-sm font-medium mb-2 block">
-                            Second Color
-                          </Label>
-                          <ColorPickerModal
-                            title="Second Gradient Color"
-                            value={theme.backgroundGradient.colors[1]}
-                            onChange={(color) =>
-                              handleGradientColorChange(1, color)
-                            }>
-                            <ColorButton
-                              color={theme.backgroundGradient.colors[1]}
-                              label="Second Color"
-                              onClick={() => {}}
-                            />
-                          </ColorPickerModal>
-                        </div>
+                        <ColorPickerModal
+                          title="First Gradient Color"
+                          value={theme.backgroundGradient.colors[0]}
+                          onChange={(color) =>
+                            handleGradientColorChange(0, color)
+                          }>
+                          <ColorButton
+                            color={theme.backgroundGradient.colors[0]}
+                            label="First Color"
+                          />
+                        </ColorPickerModal>
+                        <ColorPickerModal
+                          title="Second Gradient Color"
+                          value={theme.backgroundGradient.colors[1]}
+                          onChange={(color) =>
+                            handleGradientColorChange(1, color)
+                          }>
+                          <ColorButton
+                            color={theme.backgroundGradient.colors[1]}
+                            label="Second Color"
+                          />
+                        </ColorPickerModal>
                       </div>
-                    </div>
+                    </>
                   ) : (
-                    <div>
-                      <Label className="text-sm font-medium mb-2 block">
-                        Background Color
-                      </Label>
-                      <ColorPickerModal
-                        title="Background Color"
-                        value={theme.background}
-                        onChange={handleBackgroundChange}>
-                        <ColorButton
-                          color={theme.background}
-                          label="Background Color"
-                          onClick={() => {}}
-                        />
-                      </ColorPickerModal>
-                    </div>
+                    <ColorPickerModal
+                      title="Background Color"
+                      value={theme.background}
+                      onChange={handleBackgroundChange}>
+                      <ColorButton
+                        color={theme.background}
+                        label="Background Color"
+                      />
+                    </ColorPickerModal>
                   )}
                 </CardContent>
               </Card>
@@ -612,7 +602,6 @@ export default function ColorCustomizationForm() {
                       <ColorButton
                         color={theme.buttonPrimary}
                         label="Primary Button"
-                        onClick={() => {}}
                       />
                     </ColorPickerModal>
                   </div>
@@ -628,7 +617,6 @@ export default function ColorCustomizationForm() {
                       <ColorButton
                         color={theme.buttonSecondary}
                         label="Secondary Button"
-                        onClick={() => {}}
                       />
                     </ColorPickerModal>
                   </div>
@@ -648,11 +636,7 @@ export default function ColorCustomizationForm() {
                       title="Link Color"
                       value={theme.linkColor}
                       onChange={handleLinkColorChange}>
-                      <ColorButton
-                        color={theme.linkColor}
-                        label="Link Color"
-                        onClick={() => {}}
-                      />
+                      <ColorButton color={theme.linkColor} label="Link Color" />
                     </ColorPickerModal>
                   </div>
 
@@ -664,11 +648,7 @@ export default function ColorCustomizationForm() {
                       title="Text Color"
                       value={theme.textColor}
                       onChange={handleTextColorChange}>
-                      <ColorButton
-                        color={theme.textColor}
-                        label="Text Color"
-                        onClick={() => {}}
-                      />
+                      <ColorButton color={theme.textColor} label="Text Color" />
                     </ColorPickerModal>
                   </div>
                 </CardContent>
