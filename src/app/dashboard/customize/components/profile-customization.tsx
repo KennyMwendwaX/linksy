@@ -100,7 +100,7 @@ const radialPositions = [
   { value: "top left", label: "Top Left" },
 ];
 
-export default function ColorCustomizationForm() {
+export default function ProfileCustomization() {
   const [theme, setTheme] = useState<ThemeColors>(defaultTheme);
   const [profile, setProfile] = useState<ProfileData>(defaultProfile);
   const [links, setLinks] = useState<LinkItem[]>(defaultLinks);

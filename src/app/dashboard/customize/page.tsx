@@ -1,7 +1,7 @@
 "use client";
 
-import ColorCustomizationForm from "./components/color-customization-form";
+import ProfileCustomization from "./components/profile-customization";
 
 export default function Customize() {
-  return <ColorCustomizationForm />;
+  return <ProfileCustomization />;
 }
