@@ -35,38 +35,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-type RGBAValue = [number, number, number, number];
-
-interface ThemeColors {
-  background: string;
-  backgroundGradient?: {
-    enabled: boolean;
-    type: "linear" | "radial";
-    direction: string;
-    colors: string[];
-  };
-  buttonPrimary: string;
-  buttonSecondary: string;
-  linkColor: string;
-  textColor: string;
-}
-
-interface ProfileData {
-  name: string;
-  username: string;
-  bio: string;
-  avatar: string;
-}
-
-interface LinkItem {
-  id: string;
-  title: string;
-  url: string;
-  icon: string;
-  visible: boolean;
-  order: number;
-}
+import { LinkItem, ProfileData, RGBAValue, ThemeColors } from "@/lib/types";
+import ProfilePreview from "./profile-preview";
 
 const defaultTheme: ThemeColors = {
   background: "#ffffff",
@@ -146,8 +116,19 @@ const rgbaToHex = (rgba: RGBAValue): string => {
 };
 
 // Reusable Color Button Component
-const ColorButton = ({ color, label }: { color: string; label: string }) => (
-  <Button variant="secondary" className="flex items-center gap-2 w-full">
+const ColorButton = ({
+  color,
+  label,
+  onClick,
+}: {
+  color: string;
+  label: string;
+  onClick: () => void;
+}) => (
+  <Button
+    variant="secondary"
+    className="flex items-center gap-2 w-full"
+    onClick={onClick}>
     <div
       className="w-6 h-6 rounded border"
       style={{ backgroundColor: color }}
@@ -209,84 +190,6 @@ const ColorPickerModal = ({
         </div>
       </DialogContent>
     </Dialog>
-  );
-};
-
-const ProfilePreview = ({
-  theme,
-  profile,
-  links,
-}: {
-  theme: ThemeColors;
-  profile: ProfileData;
-  links: LinkItem[];
-}) => {
-  console.log("Rendering ProfilePreview with theme:", theme);
-
-  const backgroundStyle = useMemo(() => {
-    if (theme.backgroundGradient?.enabled) {
-      const { type, direction, colors } = theme.backgroundGradient;
-      const gradientType =
-        type === "linear" ? "linear-gradient" : "radial-gradient";
-
-      const gradientDirection =
-        type === "linear" ? direction : `circle at ${direction}`;
-
-      return {
-        background: `${gradientType}(${gradientDirection}, ${colors.join(
-          ", "
-        )})`,
-      };
-    }
-    return { backgroundColor: theme.background };
-  }, [theme]);
-
-  const visibleLinks = links
-    .filter((link) => link.visible)
-    .sort((a, b) => a.order - b.order);
-
-  return (
-    <div
-      className="rounded-lg border p-6 space-y-4 min-h-[500px]"
-      style={{
-        ...backgroundStyle,
-        color: theme.textColor,
-      }}>
-      <div className="text-center space-y-2">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 mx-auto" />
-        <h3 className="text-lg font-semibold">{profile.name}</h3>
-        <p className="text-sm opacity-80">@{profile.username}</p>
-        {profile.bio && (
-          <p className="text-sm opacity-90 max-w-xs mx-auto">{profile.bio}</p>
-        )}
-      </div>
-
-      <div className="space-y-3">
-        {visibleLinks.slice(0, 2).map((link) => (
-          <button
-            key={link.id}
-            className="w-full text-white rounded p-2"
-            style={{
-              backgroundColor:
-                link.order === 1 ? theme.buttonPrimary : theme.buttonSecondary,
-            }}>
-            {link.icon} {link.title}
-          </button>
-        ))}
-      </div>
-
-      <div className="space-y-2">
-        {visibleLinks.slice(2).map((link) => (
-          <a
-            key={link.id}
-            href="#"
-            className="block p-2 rounded hover:opacity-80 transition-opacity"
-            style={{ color: theme.linkColor }}>
-            {link.icon} {link.title}
-          </a>
-        ))}
-      </div>
-    </div>
   );
 };
 
@@ -463,7 +366,7 @@ export default function ColorCustomizationForm() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">Customize Your Profile</h1>
         <p className="text-muted-foreground">
@@ -555,6 +458,7 @@ export default function ColorCustomizationForm() {
                             handleGradientColorChange(0, color)
                           }>
                           <ColorButton
+                            onClick={() => {}}
                             color={theme.backgroundGradient.colors[0]}
                             label="First Color"
                           />
@@ -566,6 +470,7 @@ export default function ColorCustomizationForm() {
                             handleGradientColorChange(1, color)
                           }>
                           <ColorButton
+                            onClick={() => {}}
                             color={theme.backgroundGradient.colors[1]}
                             label="Second Color"
                           />
@@ -578,6 +483,7 @@ export default function ColorCustomizationForm() {
                       value={theme.background}
                       onChange={handleBackgroundChange}>
                       <ColorButton
+                        onClick={() => {}}
                         color={theme.background}
                         label="Background Color"
                       />
@@ -600,6 +506,7 @@ export default function ColorCustomizationForm() {
                       value={theme.buttonPrimary}
                       onChange={handleButtonPrimaryChange}>
                       <ColorButton
+                        onClick={() => {}}
                         color={theme.buttonPrimary}
                         label="Primary Button"
                       />
@@ -615,6 +522,7 @@ export default function ColorCustomizationForm() {
                       value={theme.buttonSecondary}
                       onChange={handleButtonSecondaryChange}>
                       <ColorButton
+                        onClick={() => {}}
                         color={theme.buttonSecondary}
                         label="Secondary Button"
                       />
@@ -636,7 +544,11 @@ export default function ColorCustomizationForm() {
                       title="Link Color"
                       value={theme.linkColor}
                       onChange={handleLinkColorChange}>
-                      <ColorButton color={theme.linkColor} label="Link Color" />
+                      <ColorButton
+                        onClick={() => {}}
+                        color={theme.linkColor}
+                        label="Link Color"
+                      />
                     </ColorPickerModal>
                   </div>
 
@@ -648,7 +560,11 @@ export default function ColorCustomizationForm() {
                       title="Text Color"
                       value={theme.textColor}
                       onChange={handleTextColorChange}>
-                      <ColorButton color={theme.textColor} label="Text Color" />
+                      <ColorButton
+                        onClick={() => {}}
+                        color={theme.textColor}
+                        label="Text Color"
+                      />
                     </ColorPickerModal>
                   </div>
                 </CardContent>
@@ -741,17 +657,7 @@ export default function ColorCustomizationForm() {
           </div>
         </div>
 
-        {/* Preview Panel */}
-        <div className="lg:sticky lg:top-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Live Preview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ProfilePreview theme={theme} profile={profile} links={links} />
-            </CardContent>
-          </Card>
-        </div>
+        <ProfilePreview theme={theme} profile={profile} links={links} />
       </div>
     </div>
   );
