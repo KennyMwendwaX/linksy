@@ -9,8 +9,38 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { VscColorMode } from "react-icons/vsc";
 import { Label } from "recharts";
+import { ColorButton, ColorPickerModal } from "./color-picker-modal";
+import { RGBAValue, ThemeColors } from "@/lib/types";
 
-export default function AppearanceTab() {
+type AppearanceTabProps = {
+  theme: ThemeColors;
+  handleGradientToggle: (enabled: boolean) => void;
+  handleGradientTypeChange: (type: "linear" | "radial") => void;
+  handleGradientDirectionChange: (direction: string) => void;
+  handleGradientColorChange: (index: number, color: RGBAValue) => void;
+  handleBackgroundChange: (color: RGBAValue) => void;
+  handleButtonPrimaryChange: (color: RGBAValue) => void;
+  handleButtonSecondaryChange: (color: RGBAValue) => void;
+  handleLinkColorChange: (color: RGBAValue) => void;
+  handleTextColorChange: (color: RGBAValue) => void;
+  linearDirections: { value: string; label: string }[];
+  radialPositions: { value: string; label: string }[];
+};
+
+export default function AppearanceTab({
+  theme,
+  handleGradientToggle,
+  handleGradientTypeChange,
+  handleGradientDirectionChange,
+  handleGradientColorChange,
+  handleBackgroundChange,
+  handleButtonPrimaryChange,
+  handleButtonSecondaryChange,
+  handleLinkColorChange,
+  handleTextColorChange,
+  linearDirections,
+  radialPositions,
+}: AppearanceTabProps) {
   return (
     <>
       <Card>

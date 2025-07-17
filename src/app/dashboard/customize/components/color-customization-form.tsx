@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -8,35 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { debounce } from "lodash";
 import { GripVertical, Plus, Trash2, User, Palette, Link2 } from "lucide-react";
-import { VscColorMode } from "react-icons/vsc";
-import {
-  ColorPicker,
-  ColorPickerAlpha,
-  ColorPickerEyeDropper,
-  ColorPickerFormat,
-  ColorPickerHue,
-  ColorPickerOutput,
-  ColorPickerPreview,
-  ColorPickerSelection,
-} from "@/components/ui/color-picker";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { LinkItem, ProfileData, RGBAValue, ThemeColors } from "@/lib/types";
 import ProfilePreview from "./profile-preview";
+import AppearanceTab from "./appearance-tab";
 
 const defaultTheme: ThemeColors = {
   background: "#ffffff",
@@ -113,84 +88,6 @@ const rgbaToHex = (rgba: RGBAValue): string => {
     .toString(16)
     .slice(1);
   return a < 1 ? `rgba(${r}, ${g}, ${b}, ${a})` : `#${hex}`;
-};
-
-// Reusable Color Button Component
-const ColorButton = ({
-  color,
-  label,
-  onClick,
-}: {
-  color: string;
-  label: string;
-  onClick: () => void;
-}) => (
-  <Button
-    variant="secondary"
-    className="flex items-center gap-2 w-full"
-    onClick={onClick}>
-    <div
-      className="w-6 h-6 rounded border"
-      style={{ backgroundColor: color }}
-    />
-    <span className="text-sm">{label}</span>
-  </Button>
-);
-
-// Single Color Picker Modal
-const ColorPickerModal = ({
-  title,
-  value,
-  onChange,
-  children,
-}: {
-  title: string;
-  value: string;
-  onChange: (color: RGBAValue) => void;
-  children: React.ReactNode;
-}) => {
-  const debouncedOnChange = useMemo(
-    () => debounce((newColor: RGBAValue) => onChange(newColor), 16),
-    [onChange]
-  );
-
-  const handleColorChange = useCallback(
-    (color: RGBAValue) => {
-      debouncedOnChange(color);
-    },
-    [debouncedOnChange]
-  );
-
-  return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
-        <div className="py-4">
-          <ColorPicker
-            defaultValue={value}
-            onChange={handleColorChange}
-            className="space-y-3">
-            <ColorPickerSelection />
-            <div className="flex items-center gap-2">
-              <ColorPickerEyeDropper />
-              <ColorPickerPreview />
-              <div className="grid w-full gap-2">
-                <ColorPickerHue />
-                <ColorPickerAlpha />
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <ColorPickerOutput />
-              <ColorPickerFormat />
-            </div>
-          </ColorPicker>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
 };
 
 const LinkOrderItem = ({
@@ -395,180 +292,20 @@ export default function ColorCustomizationForm() {
             </TabsList>
 
             <TabsContent value="appearance" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <VscColorMode className="w-5 h-5" />
-                    Background
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label>Enable Gradient Background</Label>
-                    <Switch
-                      checked={theme.backgroundGradient?.enabled}
-                      onCheckedChange={handleGradientToggle}
-                    />
-                  </div>
-
-                  {theme.backgroundGradient?.enabled ? (
-                    <>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label className="mb-2">Gradient Type</Label>
-                          <Select
-                            value={theme.backgroundGradient.type}
-                            onValueChange={handleGradientTypeChange}>
-                            <SelectTrigger className="w-full">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="linear">Linear</SelectItem>
-                              <SelectItem value="radial">Radial</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label className="mb-2">Direction / Position</Label>
-                          <Select
-                            value={theme.backgroundGradient.direction}
-                            onValueChange={handleGradientDirectionChange}>
-                            <SelectTrigger className="w-full">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent key={theme.backgroundGradient.type}>
-                              {(theme.backgroundGradient.type === "linear"
-                                ? linearDirections
-                                : radialPositions
-                              ).map((dir) => (
-                                <SelectItem key={dir.value} value={dir.value}>
-                                  {dir.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <ColorPickerModal
-                          title="First Gradient Color"
-                          value={theme.backgroundGradient.colors[0]}
-                          onChange={(color) =>
-                            handleGradientColorChange(0, color)
-                          }>
-                          <ColorButton
-                            onClick={() => {}}
-                            color={theme.backgroundGradient.colors[0]}
-                            label="First Color"
-                          />
-                        </ColorPickerModal>
-                        <ColorPickerModal
-                          title="Second Gradient Color"
-                          value={theme.backgroundGradient.colors[1]}
-                          onChange={(color) =>
-                            handleGradientColorChange(1, color)
-                          }>
-                          <ColorButton
-                            onClick={() => {}}
-                            color={theme.backgroundGradient.colors[1]}
-                            label="Second Color"
-                          />
-                        </ColorPickerModal>
-                      </div>
-                    </>
-                  ) : (
-                    <ColorPickerModal
-                      title="Background Color"
-                      value={theme.background}
-                      onChange={handleBackgroundChange}>
-                      <ColorButton
-                        onClick={() => {}}
-                        color={theme.background}
-                        label="Background Color"
-                      />
-                    </ColorPickerModal>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Button Colors</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label className="text-sm font-medium mb-2 block">
-                      Primary Button
-                    </Label>
-                    <ColorPickerModal
-                      title="Primary Button Color"
-                      value={theme.buttonPrimary}
-                      onChange={handleButtonPrimaryChange}>
-                      <ColorButton
-                        onClick={() => {}}
-                        color={theme.buttonPrimary}
-                        label="Primary Button"
-                      />
-                    </ColorPickerModal>
-                  </div>
-
-                  <div>
-                    <Label className="text-sm font-medium mb-2 block">
-                      Secondary Button
-                    </Label>
-                    <ColorPickerModal
-                      title="Secondary Button Color"
-                      value={theme.buttonSecondary}
-                      onChange={handleButtonSecondaryChange}>
-                      <ColorButton
-                        onClick={() => {}}
-                        color={theme.buttonSecondary}
-                        label="Secondary Button"
-                      />
-                    </ColorPickerModal>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Text Colors</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label className="text-sm font-medium mb-2 block">
-                      Link Color
-                    </Label>
-                    <ColorPickerModal
-                      title="Link Color"
-                      value={theme.linkColor}
-                      onChange={handleLinkColorChange}>
-                      <ColorButton
-                        onClick={() => {}}
-                        color={theme.linkColor}
-                        label="Link Color"
-                      />
-                    </ColorPickerModal>
-                  </div>
-
-                  <div>
-                    <Label className="text-sm font-medium mb-2 block">
-                      Text Color
-                    </Label>
-                    <ColorPickerModal
-                      title="Text Color"
-                      value={theme.textColor}
-                      onChange={handleTextColorChange}>
-                      <ColorButton
-                        onClick={() => {}}
-                        color={theme.textColor}
-                        label="Text Color"
-                      />
-                    </ColorPickerModal>
-                  </div>
-                </CardContent>
-              </Card>
+              <AppearanceTab
+                theme={theme}
+                handleGradientToggle={handleGradientToggle}
+                handleGradientTypeChange={handleGradientTypeChange}
+                handleGradientDirectionChange={handleGradientDirectionChange}
+                handleGradientColorChange={handleGradientColorChange}
+                handleBackgroundChange={handleBackgroundChange}
+                handleButtonPrimaryChange={handleButtonPrimaryChange}
+                handleButtonSecondaryChange={handleButtonSecondaryChange}
+                handleLinkColorChange={handleLinkColorChange}
+                handleTextColorChange={handleTextColorChange}
+                linearDirections={linearDirections}
+                radialPositions={radialPositions}
+              />
             </TabsContent>
 
             <TabsContent value="profile" className="space-y-6">
