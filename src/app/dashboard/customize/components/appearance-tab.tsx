@@ -10,7 +10,8 @@ import { Switch } from "@/components/ui/switch";
 import { VscColorMode } from "react-icons/vsc";
 import { Label } from "@/components/ui/label";
 import { ColorButton, ColorPickerModal } from "./color-picker-modal";
-import { RGBAValue, ThemeColors } from "@/lib/types";
+import { ButtonConfig, RGBAValue, ThemeColors } from "@/lib/types";
+import { rgbaToHex } from "@/lib/utils";
 
 type AppearanceTabProps = {
   theme: ThemeColors;
@@ -19,8 +20,9 @@ type AppearanceTabProps = {
   handleGradientDirectionChange: (direction: string) => void;
   handleGradientColorChange: (index: number, color: RGBAValue) => void;
   handleBackgroundChange: (color: RGBAValue) => void;
-  handleButtonPrimaryChange: (color: RGBAValue) => void;
-  handleButtonSecondaryChange: (color: RGBAValue) => void;
+  handleButtonPrimaryChange: (newConfig: ButtonConfig) => void;
+  handleButtonSecondaryChange: (newConfig: ButtonConfig) => void;
+  handleButtonTertiaryChange: (newConfig: ButtonConfig) => void;
   handleLinkColorChange: (color: RGBAValue) => void;
   handleTextColorChange: (color: RGBAValue) => void;
   linearDirections: { value: string; label: string }[];
@@ -36,6 +38,7 @@ export default function AppearanceTab({
   handleBackgroundChange,
   handleButtonPrimaryChange,
   handleButtonSecondaryChange,
+  handleButtonTertiaryChange,
   handleLinkColorChange,
   handleTextColorChange,
   linearDirections,
@@ -138,39 +141,361 @@ export default function AppearanceTab({
 
       <Card>
         <CardHeader>
-          <CardTitle>Button Colors</CardTitle>
+          <CardTitle>Button Customization</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label className="text-sm font-medium mb-2 block">
-              Primary Button
-            </Label>
-            <ColorPickerModal
-              title="Primary Button Color"
-              value={theme.buttonPrimary}
-              onChange={handleButtonPrimaryChange}>
-              <ColorButton
-                onClick={() => {}}
-                color={theme.buttonPrimary}
-                label="Primary Button"
-              />
-            </ColorPickerModal>
+        <CardContent className="space-y-6">
+          {/* Primary Button */}
+          <div className="space-y-4">
+            <Label className="text-sm font-medium">Primary Button</Label>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Background Color
+                </Label>
+                <ColorPickerModal
+                  title="Primary Button Background Color"
+                  value={theme.buttonPrimary.backgroundColor}
+                  onChange={(color) =>
+                    handleButtonPrimaryChange({
+                      ...theme.buttonPrimary,
+                      backgroundColor: rgbaToHex(color),
+                    })
+                  }>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.buttonPrimary.backgroundColor}
+                    label="Primary Background"
+                  />
+                </ColorPickerModal>
+              </div>
+
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Text Color
+                </Label>
+                <ColorPickerModal
+                  title="Primary Button Text Color"
+                  value={theme.buttonPrimary.textColor}
+                  onChange={(color) =>
+                    handleButtonPrimaryChange({
+                      ...theme.buttonPrimary,
+                      textColor: rgbaToHex(color),
+                    })
+                  }>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.buttonPrimary.textColor}
+                    label="Primary Text"
+                  />
+                </ColorPickerModal>
+              </div>
+
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Size
+                </Label>
+                <Select
+                  value={theme.buttonPrimary.size}
+                  onValueChange={(value) =>
+                    handleButtonPrimaryChange({
+                      ...theme.buttonPrimary,
+                      size: value as ButtonConfig["size"],
+                    })
+                  }>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sm">Small</SelectItem>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="lg">Large</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Shape
+                </Label>
+                <Select
+                  value={theme.buttonPrimary.shape}
+                  onValueChange={(value) =>
+                    handleButtonPrimaryChange({
+                      ...theme.buttonPrimary,
+                      shape: value as ButtonConfig["shape"],
+                    })
+                  }>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="square">Square</SelectItem>
+                    <SelectItem value="rounded">Rounded</SelectItem>
+                    <SelectItem value="pill">Pill</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="col-span-2">
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Variant
+                </Label>
+                <Select
+                  value={theme.buttonPrimary.variant}
+                  onValueChange={(value) =>
+                    handleButtonPrimaryChange({
+                      ...theme.buttonPrimary,
+                      variant: value as ButtonConfig["variant"],
+                    })
+                  }>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="ghost">Ghost</SelectItem>
+                    <SelectItem value="outline">Outline</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <Label className="text-sm font-medium mb-2 block">
-              Secondary Button
-            </Label>
-            <ColorPickerModal
-              title="Secondary Button Color"
-              value={theme.buttonSecondary}
-              onChange={handleButtonSecondaryChange}>
-              <ColorButton
-                onClick={() => {}}
-                color={theme.buttonSecondary}
-                label="Secondary Button"
-              />
-            </ColorPickerModal>
+          {/* Secondary Button */}
+          <div className="space-y-4">
+            <Label className="text-sm font-medium">Secondary Button</Label>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Background Color
+                </Label>
+                <ColorPickerModal
+                  title="Secondary Button Background Color"
+                  value={theme.buttonSecondary.backgroundColor}
+                  onChange={(color) =>
+                    handleButtonSecondaryChange({
+                      ...theme.buttonSecondary,
+                      backgroundColor: rgbaToHex(color),
+                    })
+                  }>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.buttonSecondary.backgroundColor}
+                    label="Secondary Background"
+                  />
+                </ColorPickerModal>
+              </div>
+
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Text Color
+                </Label>
+                <ColorPickerModal
+                  title="Secondary Button Text Color"
+                  value={theme.buttonSecondary.textColor}
+                  onChange={(color) =>
+                    handleButtonSecondaryChange({
+                      ...theme.buttonSecondary,
+                      textColor: rgbaToHex(color),
+                    })
+                  }>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.buttonSecondary.textColor}
+                    label="Secondary Text"
+                  />
+                </ColorPickerModal>
+              </div>
+
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Size
+                </Label>
+                <Select
+                  value={theme.buttonSecondary.size}
+                  onValueChange={(value) =>
+                    handleButtonSecondaryChange({
+                      ...theme.buttonSecondary,
+                      size: value as ButtonConfig["size"],
+                    })
+                  }>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sm">Small</SelectItem>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="lg">Large</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Shape
+                </Label>
+                <Select
+                  value={theme.buttonSecondary.shape}
+                  onValueChange={(value) =>
+                    handleButtonSecondaryChange({
+                      ...theme.buttonSecondary,
+                      shape: value as ButtonConfig["shape"],
+                    })
+                  }>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="square">Square</SelectItem>
+                    <SelectItem value="rounded">Rounded</SelectItem>
+                    <SelectItem value="pill">Pill</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="col-span-2">
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Variant
+                </Label>
+                <Select
+                  value={theme.buttonSecondary.variant}
+                  onValueChange={(value) =>
+                    handleButtonSecondaryChange({
+                      ...theme.buttonSecondary,
+                      variant: value as ButtonConfig["variant"],
+                    })
+                  }>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="ghost">Ghost</SelectItem>
+                    <SelectItem value="outline">Outline</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          {/* Tertiary Button */}
+          <div className="space-y-4">
+            <Label className="text-sm font-medium">Tertiary Button</Label>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Background Color
+                </Label>
+                <ColorPickerModal
+                  title="Tertiary Button Background Color"
+                  value={theme.buttonTertiary.backgroundColor}
+                  onChange={(color) =>
+                    handleButtonTertiaryChange({
+                      ...theme.buttonTertiary,
+                      backgroundColor: rgbaToHex(color),
+                    })
+                  }>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.buttonTertiary.backgroundColor}
+                    label="Tertiary Background"
+                  />
+                </ColorPickerModal>
+              </div>
+
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Text Color
+                </Label>
+                <ColorPickerModal
+                  title="Tertiary Button Text Color"
+                  value={theme.buttonTertiary.textColor}
+                  onChange={(color) =>
+                    handleButtonTertiaryChange({
+                      ...theme.buttonTertiary,
+                      textColor: rgbaToHex(color),
+                    })
+                  }>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.buttonTertiary.textColor}
+                    label="Tertiary Text"
+                  />
+                </ColorPickerModal>
+              </div>
+
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Size
+                </Label>
+                <Select
+                  value={theme.buttonTertiary.size}
+                  onValueChange={(value) =>
+                    handleButtonTertiaryChange({
+                      ...theme.buttonTertiary,
+                      size: value as ButtonConfig["size"],
+                    })
+                  }>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sm">Small</SelectItem>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="lg">Large</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Shape
+                </Label>
+                <Select
+                  value={theme.buttonTertiary.shape}
+                  onValueChange={(value) =>
+                    handleButtonTertiaryChange({
+                      ...theme.buttonTertiary,
+                      shape: value as ButtonConfig["shape"],
+                    })
+                  }>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="square">Square</SelectItem>
+                    <SelectItem value="rounded">Rounded</SelectItem>
+                    <SelectItem value="pill">Pill</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="col-span-2">
+                <Label className="text-xs text-muted-foreground mb-1 block">
+                  Variant
+                </Label>
+                <Select
+                  value={theme.buttonTertiary.variant}
+                  onValueChange={(value) =>
+                    handleButtonTertiaryChange({
+                      ...theme.buttonTertiary,
+                      variant: value as ButtonConfig["variant"],
+                    })
+                  }>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="ghost">Ghost</SelectItem>
+                    <SelectItem value="outline">Outline</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

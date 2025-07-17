@@ -1,5 +1,13 @@
 export type RGBAValue = [number, number, number, number];
 
+export interface ButtonConfig {
+  backgroundColor: string;
+  textColor: string;
+  size: "sm" | "default" | "lg";
+  shape: "square" | "rounded" | "pill";
+  variant: "default" | "ghost" | "outline";
+}
+
 export interface ThemeColors {
   background: string;
   backgroundGradient?: {
@@ -8,8 +16,9 @@ export interface ThemeColors {
     direction: string;
     colors: string[];
   };
-  buttonPrimary: string;
-  buttonSecondary: string;
+  buttonPrimary: ButtonConfig;
+  buttonSecondary: ButtonConfig;
+  buttonTertiary: ButtonConfig;
   linkColor: string;
   textColor: string;
 }

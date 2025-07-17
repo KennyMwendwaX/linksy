@@ -4,11 +4,18 @@ import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Palette, Link2 } from "lucide-react";
-import { LinkItem, ProfileData, RGBAValue, ThemeColors } from "@/lib/types";
+import {
+  ButtonConfig,
+  LinkItem,
+  ProfileData,
+  RGBAValue,
+  ThemeColors,
+} from "@/lib/types";
 import ProfilePreview from "./profile-preview";
 import AppearanceTab from "./appearance-tab";
 import ProfileTab from "./profile-tab";
 import LinksTab from "./links-tab";
+import { rgbaToHex } from "@/lib/utils";
 
 const defaultTheme: ThemeColors = {
   background: "#ffffff",
@@ -18,8 +25,27 @@ const defaultTheme: ThemeColors = {
     direction: "to right",
     colors: ["#3b82f6", "#8b5cf6"],
   },
-  buttonPrimary: "#3b82f6",
-  buttonSecondary: "#6b7280",
+  buttonPrimary: {
+    backgroundColor: "#3b82f6",
+    textColor: "#ffffff",
+    size: "default",
+    shape: "rounded",
+    variant: "default",
+  },
+  buttonSecondary: {
+    backgroundColor: "#6b7280",
+    textColor: "#ffffff",
+    size: "default",
+    shape: "rounded",
+    variant: "default",
+  },
+  buttonTertiary: {
+    backgroundColor: "#10b981",
+    textColor: "#ffffff",
+    size: "default",
+    shape: "rounded",
+    variant: "default",
+  },
   linkColor: "#8b5cf6",
   textColor: "#1f2937",
 };
@@ -73,19 +99,6 @@ const defaultLinks: LinkItem[] = [
     order: 5,
   },
 ];
-
-const rgbaToHex = (rgba: RGBAValue): string => {
-  const [r, g, b, a] = rgba;
-  const hex = (
-    (1 << 24) +
-    (Math.round(r) << 16) +
-    (Math.round(g) << 8) +
-    Math.round(b)
-  )
-    .toString(16)
-    .slice(1);
-  return a < 1 ? `rgba(${r}, ${g}, ${b}, ${a})` : `#${hex}`;
-};
 
 const linearDirections = [
   { value: "to right", label: "Left to Right" },
@@ -155,20 +168,39 @@ export default function ProfileCustomization() {
     }));
   }, []);
 
-  const handleButtonPrimaryChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({ ...prev, buttonPrimary: rgbaToHex(color) }));
+  const handleButtonPrimaryChange = useCallback((newConfig: ButtonConfig) => {
+    setTheme((prev) => ({
+      ...prev,
+      buttonPrimary: newConfig,
+    }));
   }, []);
 
-  const handleButtonSecondaryChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({ ...prev, buttonSecondary: rgbaToHex(color) }));
+  const handleButtonSecondaryChange = useCallback((newConfig: ButtonConfig) => {
+    setTheme((prev) => ({
+      ...prev,
+      buttonSecondary: newConfig,
+    }));
+  }, []);
+
+  const handleButtonTertiaryChange = useCallback((newConfig: ButtonConfig) => {
+    setTheme((prev) => ({
+      ...prev,
+      buttonTertiary: newConfig,
+    }));
   }, []);
 
   const handleLinkColorChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({ ...prev, linkColor: rgbaToHex(color) }));
+    setTheme((prev) => ({
+      ...prev,
+      linkColor: rgbaToHex(color),
+    }));
   }, []);
 
   const handleTextColorChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({ ...prev, textColor: rgbaToHex(color) }));
+    setTheme((prev) => ({
+      ...prev,
+      textColor: rgbaToHex(color),
+    }));
   }, []);
 
   const handleLinkUpdate = useCallback(
@@ -248,6 +280,7 @@ export default function ProfileCustomization() {
                   handleBackgroundChange={handleBackgroundChange}
                   handleButtonPrimaryChange={handleButtonPrimaryChange}
                   handleButtonSecondaryChange={handleButtonSecondaryChange}
+                  handleButtonTertiaryChange={handleButtonTertiaryChange}
                   handleLinkColorChange={handleLinkColorChange}
                   handleTextColorChange={handleTextColorChange}
                   linearDirections={linearDirections}

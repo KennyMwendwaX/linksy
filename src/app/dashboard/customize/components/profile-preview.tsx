@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ThemeColors, ProfileData, LinkItem } from "@/lib/types";
 import { useMemo } from "react";
@@ -61,17 +62,22 @@ export default function ProfilePreview({
 
             <div className="space-y-3">
               {visibleLinks.slice(0, 2).map((link) => (
-                <button
+                <Button
+                  variant={theme.buttonPrimary.variant}
                   key={link.id}
-                  className="w-full text-white rounded p-2"
+                  className="w-full rounded p-2"
                   style={{
                     backgroundColor:
                       link.order === 1
-                        ? theme.buttonPrimary
-                        : theme.buttonSecondary,
+                        ? theme.buttonPrimary.backgroundColor
+                        : theme.buttonSecondary.backgroundColor,
+                    color:
+                      link.order === 1
+                        ? theme.buttonPrimary.textColor
+                        : theme.buttonSecondary.textColor,
                   }}>
                   {link.icon} {link.title}
-                </button>
+                </Button>
               ))}
             </div>
 
