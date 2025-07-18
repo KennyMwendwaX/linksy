@@ -93,31 +93,6 @@ export default function ProfileCustomization() {
     []
   );
 
-  const handleLinkUpdate = useCallback(
-    (id: string, updates: Partial<LinkItem>) => {
-      setLinks((prev) =>
-        prev.map((link) => (link.id === id ? { ...link, ...updates } : link))
-      );
-    },
-    []
-  );
-
-  const handleLinkDelete = useCallback((id: string) => {
-    setLinks((prev) => prev.filter((link) => link.id !== id));
-  }, []);
-
-  const handleAddLink = useCallback(() => {
-    const newLink: LinkItem = {
-      id: Date.now().toString(),
-      title: "New Link",
-      url: "https://example.com",
-      icon: "🔗",
-      visible: true,
-      order: links.length + 1,
-    };
-    setLinks((prev) => [...prev, newLink]);
-  }, [links.length]);
-
   const handleSave = useCallback(() => {
     console.log("Saving theme:", theme);
     console.log("Saving profile:", profile);
@@ -169,12 +144,7 @@ export default function ProfileCustomization() {
               </TabsContent>
 
               <TabsContent value="links" className="space-y-6">
-                <LinksTab
-                  links={links}
-                  handleAddLink={handleAddLink}
-                  handleLinkUpdate={handleLinkUpdate}
-                  handleLinkDelete={handleLinkDelete}
-                />
+                <LinksTab links={links} setLinks={setLinks} />
               </TabsContent>
             </Tabs>
 
