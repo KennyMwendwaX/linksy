@@ -16,9 +16,7 @@ export interface ThemeColors {
     direction: string;
     colors: string[];
   };
-  buttonPrimary: ButtonConfig;
-  buttonSecondary: ButtonConfig;
-  buttonTertiary: ButtonConfig;
+  button: ButtonConfig;
   linkColor: string;
   textColor: string;
 }

@@ -25,25 +25,11 @@ const defaultTheme: ThemeColors = {
     direction: "to right",
     colors: ["#3b82f6", "#8b5cf6"],
   },
-  buttonPrimary: {
+  button: {
     backgroundColor: "#3b82f6",
     textColor: "#ffffff",
     size: "default",
-    shape: "rounded",
-    variant: "default",
-  },
-  buttonSecondary: {
-    backgroundColor: "#6b7280",
-    textColor: "#ffffff",
-    size: "default",
-    shape: "rounded",
-    variant: "default",
-  },
-  buttonTertiary: {
-    backgroundColor: "#10b981",
-    textColor: "#ffffff",
-    size: "default",
-    shape: "rounded",
+    shape: "default",
     variant: "default",
   },
   linkColor: "#8b5cf6",
@@ -168,24 +154,13 @@ export default function ProfileCustomization() {
     }));
   }, []);
 
-  const handleButtonPrimaryChange = useCallback((newConfig: ButtonConfig) => {
+  const handleButtonChange = useCallback((newConfig: ButtonConfig) => {
     setTheme((prev) => ({
       ...prev,
-      buttonPrimary: newConfig,
-    }));
-  }, []);
-
-  const handleButtonSecondaryChange = useCallback((newConfig: ButtonConfig) => {
-    setTheme((prev) => ({
-      ...prev,
-      buttonSecondary: newConfig,
-    }));
-  }, []);
-
-  const handleButtonTertiaryChange = useCallback((newConfig: ButtonConfig) => {
-    setTheme((prev) => ({
-      ...prev,
-      buttonTertiary: newConfig,
+      button: {
+        ...prev.button,
+        primary: newConfig,
+      },
     }));
   }, []);
 
@@ -278,9 +253,7 @@ export default function ProfileCustomization() {
                   handleGradientDirectionChange={handleGradientDirectionChange}
                   handleGradientColorChange={handleGradientColorChange}
                   handleBackgroundChange={handleBackgroundChange}
-                  handleButtonPrimaryChange={handleButtonPrimaryChange}
-                  handleButtonSecondaryChange={handleButtonSecondaryChange}
-                  handleButtonTertiaryChange={handleButtonTertiaryChange}
+                  handleButtonChange={handleButtonChange}
                   handleLinkColorChange={handleLinkColorChange}
                   handleTextColorChange={handleTextColorChange}
                   linearDirections={linearDirections}

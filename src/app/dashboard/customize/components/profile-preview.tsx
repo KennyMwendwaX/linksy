@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ThemeColors, ProfileData, LinkItem } from "@/lib/types";
+import { cn, getShapeClasses } from "@/lib/utils";
 import { useMemo } from "react";
 
 type ProfilePreviewProps = {
@@ -36,6 +37,8 @@ export default function ProfilePreview({
     .filter((link) => link.visible)
     .sort((a, b) => a.order - b.order);
 
+  const buttonShapeClasses = getShapeClasses(theme.button.shape);
+
   return (
     <div className="lg:sticky lg:top-6 lg:self-start lg:max-h-screen lg:overflow-y-auto">
       <Card>
@@ -63,18 +66,20 @@ export default function ProfilePreview({
             <div className="space-y-3">
               {visibleLinks.map((link) => (
                 <Button
-                  variant={theme.buttonPrimary.variant}
                   key={link.id}
-                  className="w-full rounded p-2"
+                  variant={theme.button.variant}
+                  size={theme.button.size}
+                  className={cn(buttonShapeClasses)}
                   style={{
                     backgroundColor:
-                      link.order === 1
-                        ? theme.buttonPrimary.backgroundColor
-                        : theme.buttonSecondary.backgroundColor,
-                    color:
-                      link.order === 1
-                        ? theme.buttonPrimary.textColor
-                        : theme.buttonSecondary.textColor,
+                      theme.button.variant === "default"
+                        ? theme.button.backgroundColor
+                        : undefined,
+                    color: theme.button.textColor,
+                    borderColor:
+                      theme.button.variant === "outline"
+                        ? theme.button.backgroundColor
+                        : undefined,
                   }}>
                   {link.icon} {link.title}
                 </Button>
