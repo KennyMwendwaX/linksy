@@ -35,7 +35,10 @@ const radialPositions = [
 export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
   const handleBackgroundChange = useCallback(
     (color: RGBAValue) => {
-      setTheme((prev) => ({ ...prev, background: rgbaToHex(color) }));
+      setTheme((prev) => ({
+        ...prev,
+        background: { color: rgbaToHex(color) },
+      }));
     },
     [setTheme]
   );
@@ -44,11 +47,14 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
     (index: number, color: RGBAValue) => {
       setTheme((prev) => ({
         ...prev,
-        backgroundGradient: {
-          ...prev.backgroundGradient!,
-          colors: prev.backgroundGradient!.colors.map((c, i) =>
-            i === index ? rgbaToHex(color) : c
-          ),
+        background: {
+          ...prev.background,
+          gradient: {
+            ...prev.background.gradient!,
+            colors: prev.background.gradient!.colors.map((c, i) =>
+              i === index ? rgbaToHex(color) : c
+            ),
+          },
         },
       }));
     },
@@ -59,9 +65,14 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
     (enabled: boolean) => {
       setTheme((prev) => ({
         ...prev,
-        backgroundGradient: {
-          ...prev.backgroundGradient!,
-          enabled,
+        background: {
+          ...prev.background,
+          gradient: {
+            enabled,
+            type: prev.background.gradient?.type || "linear",
+            direction: prev.background.gradient?.direction || "to right",
+            colors: prev.background.gradient?.colors || ["#3b82f6", "#8b5cf6"],
+          },
         },
       }));
     },
@@ -72,10 +83,13 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
     (type: "linear" | "radial") => {
       setTheme((prev) => ({
         ...prev,
-        backgroundGradient: {
-          ...prev.backgroundGradient!,
-          type,
-          direction: type === "linear" ? "to right" : "center",
+        background: {
+          ...prev.background,
+          gradient: {
+            ...prev.background.gradient!,
+            type,
+            direction: type === "linear" ? "to right" : "center",
+          },
         },
       }));
     },
@@ -86,9 +100,12 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
     (direction: string) => {
       setTheme((prev) => ({
         ...prev,
-        backgroundGradient: {
-          ...prev.backgroundGradient!,
-          direction,
+        background: {
+          ...prev.background,
+          gradient: {
+            ...prev.background.gradient!,
+            direction,
+          },
         },
       }));
     },
@@ -145,18 +162,18 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
           <div className="flex items-center justify-between">
             <Label>Enable Gradient Background</Label>
             <Switch
-              checked={theme.backgroundGradient?.enabled}
+              checked={theme.background.gradient?.enabled}
               onCheckedChange={handleGradientToggle}
             />
           </div>
 
-          {theme.backgroundGradient?.enabled ? (
+          {theme.background.gradient?.enabled ? (
             <>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="mb-2">Gradient Type</Label>
                   <Select
-                    value={theme.backgroundGradient.type}
+                    value={theme.background.gradient.type}
                     onValueChange={handleGradientTypeChange}>
                     <SelectTrigger className="w-full">
                       <SelectValue />
@@ -170,13 +187,13 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                 <div>
                   <Label className="mb-2">Direction / Position</Label>
                   <Select
-                    value={theme.backgroundGradient.direction}
+                    value={theme.background.gradient.direction}
                     onValueChange={handleGradientDirectionChange}>
                     <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent key={theme.backgroundGradient.type}>
-                      {(theme.backgroundGradient.type === "linear"
+                    <SelectContent key={theme.background.gradient.type}>
+                      {(theme.background.gradient.type === "linear"
                         ? linearDirections
                         : radialPositions
                       ).map((dir) => (
@@ -192,21 +209,21 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
               <div className="grid grid-cols-2 gap-4">
                 <ColorPickerModal
                   title="First Gradient Color"
-                  value={theme.backgroundGradient.colors[0]}
+                  value={theme.background.gradient.colors[0]}
                   onChange={(color) => handleGradientColorChange(0, color)}>
                   <ColorButton
                     onClick={() => {}}
-                    color={theme.backgroundGradient.colors[0]}
+                    color={theme.background.gradient.colors[0]}
                     label="First Color"
                   />
                 </ColorPickerModal>
                 <ColorPickerModal
                   title="Second Gradient Color"
-                  value={theme.backgroundGradient.colors[1]}
+                  value={theme.background.gradient.colors[1]}
                   onChange={(color) => handleGradientColorChange(1, color)}>
                   <ColorButton
                     onClick={() => {}}
-                    color={theme.backgroundGradient.colors[1]}
+                    color={theme.background.gradient.colors[1]}
                     label="Second Color"
                   />
                 </ColorPickerModal>
@@ -215,11 +232,11 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
           ) : (
             <ColorPickerModal
               title="Background Color"
-              value={theme.background}
+              value={theme.background.color}
               onChange={handleBackgroundChange}>
               <ColorButton
                 onClick={() => {}}
-                color={theme.background}
+                color={theme.background.color}
                 label="Background Color"
               />
             </ColorPickerModal>
@@ -229,14 +246,23 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Button Customization</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+              <div className="w-2 h-2 bg-white rounded-sm"></div>
+            </div>
+            Button Customization
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Color Section */}
           <div className="space-y-4">
+            <div className="text-sm font-medium text-foreground/90 border-b pb-2">
+              Colors
+            </div>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-xs text-muted-foreground mb-1 block">
-                  Background Color
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Background
                 </Label>
                 <ColorPickerModal
                   title="Button Background Color"
@@ -255,9 +281,9 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                 </ColorPickerModal>
               </div>
 
-              <div>
-                <Label className="text-xs text-muted-foreground mb-1 block">
-                  Text Color
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Text
                 </Label>
                 <ColorPickerModal
                   title="Button Text Color"
@@ -275,55 +301,17 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                   />
                 </ColorPickerModal>
               </div>
+            </div>
+          </div>
 
-              <div>
-                <Label className="text-xs text-muted-foreground mb-1 block">
-                  Size
-                </Label>
-                <Select
-                  value={theme.button.size}
-                  onValueChange={(value) =>
-                    handleButtonChange({
-                      ...theme.button,
-                      size: value as ButtonConfig["size"],
-                    })
-                  }>
-                  <SelectTrigger className="h-8">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="sm">Small</SelectItem>
-                    <SelectItem value="lg">Large</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label className="text-xs text-muted-foreground mb-1 block">
-                  Shape
-                </Label>
-                <Select
-                  value={theme.button.shape}
-                  onValueChange={(value) =>
-                    handleButtonChange({
-                      ...theme.button,
-                      shape: value as ButtonConfig["shape"],
-                    })
-                  }>
-                  <SelectTrigger className="h-8">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="square">Square</SelectItem>
-                    <SelectItem value="pill">Pill</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="col-span-2">
-                <Label className="text-xs text-muted-foreground mb-1 block">
+          {/* Style Section */}
+          <div className="space-y-4">
+            <div className="text-sm font-medium text-foreground/90 border-b pb-2">
+              Style
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
                   Variant
                 </Label>
                 <Select
@@ -334,16 +322,125 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                       variant: value as ButtonConfig["variant"],
                     })
                   }>
-                  <SelectTrigger className="h-8">
+                  <SelectTrigger className="h-9 w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="ghost">Ghost</SelectItem>
-                    <SelectItem value="outline">Outline</SelectItem>
+                    <SelectItem value="default">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-primary rounded-sm"></div>
+                        Default
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="ghost">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 border-2 border-dashed border-primary rounded-sm"></div>
+                        Ghost
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="outline">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 border-2 border-primary rounded-sm"></div>
+                        Outline
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Shape
+                </Label>
+                <Select
+                  value={theme.button.shape}
+                  onValueChange={(value) =>
+                    handleButtonChange({
+                      ...theme.button,
+                      shape: value as ButtonConfig["shape"],
+                    })
+                  }>
+                  <SelectTrigger className="h-9 w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-primary rounded"></div>
+                        Default
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="square">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-primary"></div>
+                        Square
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="pill">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-primary rounded-full"></div>
+                        Pill
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          {/* Size Section */}
+          <div className="space-y-4">
+            <div className="text-sm font-medium text-foreground/90 border-b pb-2">
+              Size
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={() =>
+                  handleButtonChange({
+                    ...theme.button,
+                    size: "sm",
+                  })
+                }
+                className={`p-2 rounded-md border transition-all ${
+                  theme.button.size === "sm"
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border hover:border-primary/50"
+                }`}>
+                <div className="text-xs font-medium">Small</div>
+                <div className="w-full h-6 bg-current/20 rounded mt-1"></div>
+              </button>
+
+              <button
+                onClick={() =>
+                  handleButtonChange({
+                    ...theme.button,
+                    size: "default",
+                  })
+                }
+                className={`p-2 rounded-md border transition-all ${
+                  theme.button.size === "default"
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border hover:border-primary/50"
+                }`}>
+                <div className="text-xs font-medium">Default</div>
+                <div className="w-full h-8 bg-current/20 rounded mt-1"></div>
+              </button>
+
+              <button
+                onClick={() =>
+                  handleButtonChange({
+                    ...theme.button,
+                    size: "lg",
+                  })
+                }
+                className={`p-2 rounded-md border transition-all ${
+                  theme.button.size === "lg"
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border hover:border-primary/50"
+                }`}>
+                <div className="text-xs font-medium">Large</div>
+                <div className="w-full h-10 bg-current/20 rounded mt-1"></div>
+              </button>
             </div>
           </div>
         </CardContent>

@@ -1,5 +1,17 @@
 export type RGBAValue = [number, number, number, number];
 
+export interface BackgroundGradientConfig {
+  enabled: boolean;
+  type: "linear" | "radial";
+  direction: string;
+  colors: string[];
+}
+
+export interface BackgroundConfig {
+  color: string;
+  gradient?: BackgroundGradientConfig;
+}
+
 export interface ButtonConfig {
   backgroundColor: string;
   textColor: string;
@@ -9,13 +21,7 @@ export interface ButtonConfig {
 }
 
 export interface ThemeColors {
-  background: string;
-  backgroundGradient?: {
-    enabled: boolean;
-    type: "linear" | "radial";
-    direction: string;
-    colors: string[];
-  };
+  background: BackgroundConfig;
   button: ButtonConfig;
   linkColor: string;
   textColor: string;

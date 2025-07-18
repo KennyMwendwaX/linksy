@@ -16,8 +16,8 @@ export default function ProfilePreview({
   links,
 }: ProfilePreviewProps) {
   const backgroundStyle = useMemo(() => {
-    if (theme.backgroundGradient?.enabled) {
-      const { type, direction, colors } = theme.backgroundGradient;
+    if (theme.background.gradient?.enabled) {
+      const { type, direction, colors } = theme.background.gradient;
       const gradientType =
         type === "linear" ? "linear-gradient" : "radial-gradient";
 
@@ -30,7 +30,7 @@ export default function ProfilePreview({
         )})`,
       };
     }
-    return { backgroundColor: theme.background };
+    return { backgroundColor: theme.background.color }; // Use .color property
   }, [theme]);
 
   const visibleLinks = links

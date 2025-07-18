@@ -11,12 +11,14 @@ import ProfileTab from "./profile-tab";
 import LinksTab from "./links-tab";
 
 const defaultTheme: ThemeColors = {
-  background: "#ffffff",
-  backgroundGradient: {
-    enabled: false,
-    type: "linear",
-    direction: "to right",
-    colors: ["#3b82f6", "#8b5cf6"],
+  background: {
+    color: "#ffffff",
+    gradient: {
+      enabled: false,
+      type: "linear",
+      direction: "to right",
+      colors: ["#3b82f6", "#8b5cf6"],
+    },
   },
   button: {
     backgroundColor: "#3b82f6",
