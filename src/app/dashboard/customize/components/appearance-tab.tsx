@@ -20,9 +20,12 @@ type AppearanceTabProps = {
 };
 
 const linearDirections = [
-  { value: "to right", label: "Left to Right" },
-  { value: "to bottom", label: "Top to Bottom" },
+  { value: "to right", label: "Left to Right →" },
+  { value: "to bottom", label: "Top to Bottom ↓" },
+  { value: "to bottom right", label: "Diagonal ↘" },
+  { value: "45deg", label: "45°" },
   { value: "90deg", label: "90°" },
+  { value: "135deg", label: "135°" },
 ];
 
 const radialPositions = [
@@ -30,6 +33,19 @@ const radialPositions = [
   { value: "top", label: "Top" },
   { value: "bottom", label: "Bottom" },
   { value: "top left", label: "Top Left" },
+  { value: "top right", label: "Top Right" },
+  { value: "circle at center", label: "Circle" },
+];
+
+const conicalDirections = [
+  { value: "0deg", label: "0° (Top)" },
+  { value: "45deg", label: "45°" },
+  { value: "90deg", label: "90° (Right)" },
+  { value: "135deg", label: "135°" },
+  { value: "180deg", label: "180° (Bottom)" },
+  { value: "225deg", label: "225°" },
+  { value: "270deg", label: "270° (Left)" },
+  { value: "315deg", label: "315°" },
 ];
 
 export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
@@ -80,7 +96,7 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
   );
 
   const handleGradientTypeChange = useCallback(
-    (type: "linear" | "radial") => {
+    (type: "linear" | "radial" | "conic") => {
       setTheme((prev) => ({
         ...prev,
         background: {
@@ -88,7 +104,12 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
           gradient: {
             ...prev.background.gradient!,
             type,
-            direction: type === "linear" ? "to right" : "center",
+            direction:
+              type === "linear"
+                ? "to right"
+                : type === "radial"
+                ? "center"
+                : "0deg",
           },
         },
       }));
@@ -179,13 +200,40 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="linear">Linear</SelectItem>
-                      <SelectItem value="radial">Radial</SelectItem>
+                      <SelectItem value="linear">
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-sm"></div>
+                          Linear
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="radial">
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 rounded-full bg-gradient-radial from-blue-500 to-purple-500"></div>
+                          Radial
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="conic">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded-full"
+                            style={{
+                              background:
+                                "conic-gradient(from 0deg, #3b82f6, #8b5cf6, #3b82f6)",
+                            }}></div>
+                          Conic
+                        </div>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label className="mb-2">Direction / Position</Label>
+                  <Label className="mb-2">
+                    {theme.background.gradient.type === "linear"
+                      ? "Direction"
+                      : theme.background.gradient.type === "radial"
+                      ? "Position"
+                      : "Angle"}
+                  </Label>
                   <Select
                     value={theme.background.gradient.direction}
                     onValueChange={handleGradientDirectionChange}>
@@ -195,7 +243,9 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                     <SelectContent key={theme.background.gradient.type}>
                       {(theme.background.gradient.type === "linear"
                         ? linearDirections
-                        : radialPositions
+                        : theme.background.gradient.type === "radial"
+                        ? radialPositions
+                        : conicalDirections
                       ).map((dir) => (
                         <SelectItem key={dir.value} value={dir.value}>
                           {dir.label}
@@ -206,40 +256,46 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <ColorPickerModal
-                  title="First Gradient Color"
-                  value={theme.background.gradient.colors[0]}
-                  onChange={(color) => handleGradientColorChange(0, color)}>
-                  <ColorButton
-                    onClick={() => {}}
-                    color={theme.background.gradient.colors[0]}
-                    label="First Color"
-                  />
-                </ColorPickerModal>
-                <ColorPickerModal
-                  title="Second Gradient Color"
-                  value={theme.background.gradient.colors[1]}
-                  onChange={(color) => handleGradientColorChange(1, color)}>
-                  <ColorButton
-                    onClick={() => {}}
-                    color={theme.background.gradient.colors[1]}
-                    label="Second Color"
-                  />
-                </ColorPickerModal>
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Gradient Colors</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <ColorPickerModal
+                    title="First Gradient Color"
+                    value={theme.background.gradient.colors[0]}
+                    onChange={(color) => handleGradientColorChange(0, color)}>
+                    <ColorButton
+                      onClick={() => {}}
+                      color={theme.background.gradient.colors[0]}
+                      label="Start Color"
+                    />
+                  </ColorPickerModal>
+                  <ColorPickerModal
+                    title="Second Gradient Color"
+                    value={theme.background.gradient.colors[1]}
+                    onChange={(color) => handleGradientColorChange(1, color)}>
+                    <ColorButton
+                      onClick={() => {}}
+                      color={theme.background.gradient.colors[1]}
+                      label="End Color"
+                    />
+                  </ColorPickerModal>
+                </div>
               </div>
             </>
           ) : (
-            <ColorPickerModal
-              title="Background Color"
-              value={theme.background.color}
-              onChange={handleBackgroundChange}>
-              <ColorButton
-                onClick={() => {}}
-                color={theme.background.color}
-                label="Background Color"
-              />
-            </ColorPickerModal>
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">Background Color</Label>
+              <ColorPickerModal
+                title="Background Color"
+                value={theme.background.color}
+                onChange={handleBackgroundChange}>
+                <ColorButton
+                  onClick={() => {}}
+                  color={theme.background.color}
+                  label="Background Color"
+                />
+              </ColorPickerModal>
+            </div>
           )}
         </CardContent>
       </Card>

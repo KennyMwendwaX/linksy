@@ -18,19 +18,32 @@ export default function ProfilePreview({
   const backgroundStyle = useMemo(() => {
     if (theme.background.gradient?.enabled) {
       const { type, direction, colors } = theme.background.gradient;
-      const gradientType =
-        type === "linear" ? "linear-gradient" : "radial-gradient";
 
-      const gradientDirection =
-        type === "linear" ? direction : `circle at ${direction}`;
+      let gradientFunction;
+
+      if (type === "linear") {
+        gradientFunction = `linear-gradient(${direction}, ${colors.join(
+          ", "
+        )})`;
+      } else if (type === "radial") {
+        const radialDirection =
+          direction.includes("circle") || direction.includes("ellipse")
+            ? direction
+            : `circle at ${direction}`;
+        gradientFunction = `radial-gradient(${radialDirection}, ${colors.join(
+          ", "
+        )})`;
+      } else if (type === "conic") {
+        gradientFunction = `conic-gradient(from ${direction}, ${colors.join(
+          ", "
+        )})`;
+      }
 
       return {
-        background: `${gradientType}(${gradientDirection}, ${colors.join(
-          ", "
-        )})`,
+        background: gradientFunction,
       };
     }
-    return { backgroundColor: theme.background.color }; // Use .color property
+    return { backgroundColor: theme.background.color };
   }, [theme]);
 
   const visibleLinks = links

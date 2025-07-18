@@ -2,7 +2,7 @@ export type RGBAValue = [number, number, number, number];
 
 export interface BackgroundGradientConfig {
   enabled: boolean;
-  type: "linear" | "radial";
+  type: "linear" | "radial" | "conic";
   direction: string;
   colors: string[];
 }
