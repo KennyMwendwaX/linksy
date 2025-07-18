@@ -12,34 +12,126 @@ import { Label } from "@/components/ui/label";
 import { ColorButton, ColorPickerModal } from "./color-picker-modal";
 import { ButtonConfig, RGBAValue, ThemeColors } from "@/lib/types";
 import { rgbaToHex } from "@/lib/utils";
+import { useCallback } from "react";
 
 type AppearanceTabProps = {
   theme: ThemeColors;
-  handleGradientToggle: (enabled: boolean) => void;
-  handleGradientTypeChange: (type: "linear" | "radial") => void;
-  handleGradientDirectionChange: (direction: string) => void;
-  handleGradientColorChange: (index: number, color: RGBAValue) => void;
-  handleBackgroundChange: (color: RGBAValue) => void;
-  handleButtonChange: (newConfig: ButtonConfig) => void;
-  handleLinkColorChange: (color: RGBAValue) => void;
-  handleTextColorChange: (color: RGBAValue) => void;
-  linearDirections: { value: string; label: string }[];
-  radialPositions: { value: string; label: string }[];
+  setTheme: React.Dispatch<React.SetStateAction<ThemeColors>>;
 };
 
-export default function AppearanceTab({
-  theme,
-  handleGradientToggle,
-  handleGradientTypeChange,
-  handleGradientDirectionChange,
-  handleGradientColorChange,
-  handleBackgroundChange,
-  handleButtonChange,
-  handleLinkColorChange,
-  handleTextColorChange,
-  linearDirections,
-  radialPositions,
-}: AppearanceTabProps) {
+const linearDirections = [
+  { value: "to right", label: "Left to Right" },
+  { value: "to bottom", label: "Top to Bottom" },
+  { value: "90deg", label: "90°" },
+];
+
+const radialPositions = [
+  { value: "center", label: "Center" },
+  { value: "top", label: "Top" },
+  { value: "bottom", label: "Bottom" },
+  { value: "top left", label: "Top Left" },
+];
+
+export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
+  const handleBackgroundChange = useCallback(
+    (color: RGBAValue) => {
+      setTheme((prev) => ({ ...prev, background: rgbaToHex(color) }));
+    },
+    [setTheme]
+  );
+
+  const handleGradientColorChange = useCallback(
+    (index: number, color: RGBAValue) => {
+      setTheme((prev) => ({
+        ...prev,
+        backgroundGradient: {
+          ...prev.backgroundGradient!,
+          colors: prev.backgroundGradient!.colors.map((c, i) =>
+            i === index ? rgbaToHex(color) : c
+          ),
+        },
+      }));
+    },
+    [setTheme]
+  );
+
+  const handleGradientToggle = useCallback(
+    (enabled: boolean) => {
+      setTheme((prev) => ({
+        ...prev,
+        backgroundGradient: {
+          ...prev.backgroundGradient!,
+          enabled,
+        },
+      }));
+    },
+    [setTheme]
+  );
+
+  const handleGradientTypeChange = useCallback(
+    (type: "linear" | "radial") => {
+      setTheme((prev) => ({
+        ...prev,
+        backgroundGradient: {
+          ...prev.backgroundGradient!,
+          type,
+          direction: type === "linear" ? "to right" : "center",
+        },
+      }));
+    },
+    [setTheme]
+  );
+
+  const handleGradientDirectionChange = useCallback(
+    (direction: string) => {
+      setTheme((prev) => ({
+        ...prev,
+        backgroundGradient: {
+          ...prev.backgroundGradient!,
+          direction,
+        },
+      }));
+    },
+    [setTheme]
+  );
+
+  const handleButtonChange = useCallback(
+    (newConfig: ButtonConfig) => {
+      setTheme((prev) => ({
+        ...prev,
+        button: {
+          ...prev.button,
+          backgroundColor: newConfig.backgroundColor,
+          textColor: newConfig.textColor,
+          size: newConfig.size,
+          shape: newConfig.shape,
+          variant: newConfig.variant,
+        },
+      }));
+    },
+    [setTheme]
+  );
+
+  const handleLinkColorChange = useCallback(
+    (color: RGBAValue) => {
+      setTheme((prev) => ({
+        ...prev,
+        linkColor: rgbaToHex(color),
+      }));
+    },
+    [setTheme]
+  );
+
+  const handleTextColorChange = useCallback(
+    (color: RGBAValue) => {
+      setTheme((prev) => ({
+        ...prev,
+        textColor: rgbaToHex(color),
+      }));
+    },
+    [setTheme]
+  );
+
   return (
     <>
       <Card>
@@ -140,17 +232,14 @@ export default function AppearanceTab({
           <CardTitle>Button Customization</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Primary Button */}
           <div className="space-y-4">
-            <Label className="text-sm font-medium">Primary Button</Label>
-
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="text-xs text-muted-foreground mb-1 block">
                   Background Color
                 </Label>
                 <ColorPickerModal
-                  title="Primary Button Background Color"
+                  title="Button Background Color"
                   value={theme.button.backgroundColor}
                   onChange={(color) =>
                     handleButtonChange({
@@ -161,7 +250,7 @@ export default function AppearanceTab({
                   <ColorButton
                     onClick={() => {}}
                     color={theme.button.backgroundColor}
-                    label="Primary Background"
+                    label="Background"
                   />
                 </ColorPickerModal>
               </div>
@@ -171,7 +260,7 @@ export default function AppearanceTab({
                   Text Color
                 </Label>
                 <ColorPickerModal
-                  title="Primary Button Text Color"
+                  title="Button Text Color"
                   value={theme.button.textColor}
                   onChange={(color) =>
                     handleButtonChange({
@@ -182,7 +271,7 @@ export default function AppearanceTab({
                   <ColorButton
                     onClick={() => {}}
                     color={theme.button.textColor}
-                    label="Primary Text"
+                    label="Text"
                   />
                 </ColorPickerModal>
               </div>
@@ -203,8 +292,8 @@ export default function AppearanceTab({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sm">Small</SelectItem>
                     <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="sm">Small</SelectItem>
                     <SelectItem value="lg">Large</SelectItem>
                   </SelectContent>
                 </Select>
@@ -226,8 +315,8 @@ export default function AppearanceTab({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="default">Default</SelectItem>
                     <SelectItem value="square">Square</SelectItem>
-                    <SelectItem value="rounded">Rounded</SelectItem>
                     <SelectItem value="pill">Pill</SelectItem>
                   </SelectContent>
                 </Select>

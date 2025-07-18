@@ -4,18 +4,11 @@ import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Palette, Link2 } from "lucide-react";
-import {
-  ButtonConfig,
-  LinkItem,
-  ProfileData,
-  RGBAValue,
-  ThemeColors,
-} from "@/lib/types";
+import { LinkItem, ProfileData, ThemeColors } from "@/lib/types";
 import ProfilePreview from "./profile-preview";
 import AppearanceTab from "./appearance-tab";
 import ProfileTab from "./profile-tab";
 import LinksTab from "./links-tab";
-import { rgbaToHex } from "@/lib/utils";
 
 const defaultTheme: ThemeColors = {
   background: "#ffffff",
@@ -86,97 +79,17 @@ const defaultLinks: LinkItem[] = [
   },
 ];
 
-const linearDirections = [
-  { value: "to right", label: "Left to Right" },
-  { value: "to bottom", label: "Top to Bottom" },
-  { value: "90deg", label: "90°" },
-];
-
-const radialPositions = [
-  { value: "center", label: "Center" },
-  { value: "top", label: "Top" },
-  { value: "bottom", label: "Bottom" },
-  { value: "top left", label: "Top Left" },
-];
-
 export default function ProfileCustomization() {
   const [theme, setTheme] = useState<ThemeColors>(defaultTheme);
   const [profile, setProfile] = useState<ProfileData>(defaultProfile);
   const [links, setLinks] = useState<LinkItem[]>(defaultLinks);
 
-  const handleBackgroundChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({ ...prev, background: rgbaToHex(color) }));
-  }, []);
-
-  const handleGradientColorChange = useCallback(
-    (index: number, color: RGBAValue) => {
-      setTheme((prev) => ({
-        ...prev,
-        backgroundGradient: {
-          ...prev.backgroundGradient!,
-          colors: prev.backgroundGradient!.colors.map((c, i) =>
-            i === index ? rgbaToHex(color) : c
-          ),
-        },
-      }));
+  const stableSetTheme = useCallback(
+    (value: React.SetStateAction<ThemeColors>) => {
+      setTheme(value);
     },
     []
   );
-
-  const handleGradientToggle = useCallback((enabled: boolean) => {
-    setTheme((prev) => ({
-      ...prev,
-      backgroundGradient: {
-        ...prev.backgroundGradient!,
-        enabled,
-      },
-    }));
-  }, []);
-
-  const handleGradientTypeChange = useCallback((type: "linear" | "radial") => {
-    setTheme((prev) => ({
-      ...prev,
-      backgroundGradient: {
-        ...prev.backgroundGradient!,
-        type,
-        direction: type === "linear" ? "to right" : "center",
-      },
-    }));
-  }, []);
-
-  const handleGradientDirectionChange = useCallback((direction: string) => {
-    setTheme((prev) => ({
-      ...prev,
-      backgroundGradient: {
-        ...prev.backgroundGradient!,
-        direction,
-      },
-    }));
-  }, []);
-
-  const handleButtonChange = useCallback((newConfig: ButtonConfig) => {
-    setTheme((prev) => ({
-      ...prev,
-      button: {
-        ...prev.button,
-        primary: newConfig,
-      },
-    }));
-  }, []);
-
-  const handleLinkColorChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({
-      ...prev,
-      linkColor: rgbaToHex(color),
-    }));
-  }, []);
-
-  const handleTextColorChange = useCallback((color: RGBAValue) => {
-    setTheme((prev) => ({
-      ...prev,
-      textColor: rgbaToHex(color),
-    }));
-  }, []);
 
   const handleLinkUpdate = useCallback(
     (id: string, updates: Partial<LinkItem>) => {
@@ -246,19 +159,7 @@ export default function ProfileCustomization() {
               </TabsList>
 
               <TabsContent value="appearance" className="space-y-6">
-                <AppearanceTab
-                  theme={theme}
-                  handleGradientToggle={handleGradientToggle}
-                  handleGradientTypeChange={handleGradientTypeChange}
-                  handleGradientDirectionChange={handleGradientDirectionChange}
-                  handleGradientColorChange={handleGradientColorChange}
-                  handleBackgroundChange={handleBackgroundChange}
-                  handleButtonChange={handleButtonChange}
-                  handleLinkColorChange={handleLinkColorChange}
-                  handleTextColorChange={handleTextColorChange}
-                  linearDirections={linearDirections}
-                  radialPositions={radialPositions}
-                />
+                <AppearanceTab theme={theme} setTheme={stableSetTheme} />
               </TabsContent>
 
               <TabsContent value="profile" className="space-y-6">

@@ -69,7 +69,7 @@ export default function ProfilePreview({
                   key={link.id}
                   variant={theme.button.variant}
                   size={theme.button.size}
-                  className={cn(buttonShapeClasses)}
+                  className={cn(buttonShapeClasses, "w-full p-2")}
                   style={{
                     backgroundColor:
                       theme.button.variant === "default"
