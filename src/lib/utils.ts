@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { RGBAValue } from "./types";
+import { ButtonConfig, RGBAValue } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -41,4 +41,17 @@ export const rgbaToHex = (rgba: RGBAValue): string => {
     .toString(16)
     .slice(1);
   return a < 1 ? `rgba(${r}, ${g}, ${b}, ${a})` : `#${hex}`;
+};
+
+export const getShapeClasses = (shape: ButtonConfig["shape"]) => {
+  switch (shape) {
+    case "default":
+      return "rounded-md";
+    case "square":
+      return "rounded-none";
+    case "pill":
+      return "rounded-full";
+    default:
+      return "rounded-md";
+  }
 };

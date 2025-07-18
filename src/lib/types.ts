@@ -4,7 +4,7 @@ export interface ButtonConfig {
   backgroundColor: string;
   textColor: string;
   size: "sm" | "default" | "lg";
-  shape: "square" | "rounded" | "pill";
+  shape: "default" | "square" | "pill";
   variant: "default" | "ghost" | "outline";
 }
 

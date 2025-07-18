@@ -61,7 +61,7 @@ export default function ProfilePreview({
             </div>
 
             <div className="space-y-3">
-              {visibleLinks.slice(0, 2).map((link) => (
+              {visibleLinks.map((link) => (
                 <Button
                   variant={theme.buttonPrimary.variant}
                   key={link.id}
@@ -78,18 +78,6 @@ export default function ProfilePreview({
                   }}>
                   {link.icon} {link.title}
                 </Button>
-              ))}
-            </div>
-
-            <div className="space-y-2">
-              {visibleLinks.slice(2).map((link) => (
-                <a
-                  key={link.id}
-                  href="#"
-                  className="block p-2 rounded hover:opacity-80 transition-opacity"
-                  style={{ color: theme.linkColor }}>
-                  {link.icon} {link.title}
-                </a>
               ))}
             </div>
           </div>
