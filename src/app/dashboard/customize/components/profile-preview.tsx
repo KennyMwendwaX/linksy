@@ -96,11 +96,16 @@ export default function ProfilePreview({
             {/* Social Links Row */}
             <div className="flex justify-center gap-3">
               {socialLinks.map((link) => (
-                <div
+                <Button
                   key={link.id}
-                  className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer">
-                  <IconComponent url={link.originalUrl} size={20} />
-                </div>
+                  style={{ backgroundColor: theme.socialMedia.backgroundColor }}
+                  className="w-10 h-10 rounded-full backdrop-blur-sm flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-[1.1] active:scale-[0.98]">
+                  <IconComponent
+                    style={{ color: theme.socialMedia.iconColor }}
+                    url={link.originalUrl}
+                    size={20}
+                  />
+                </Button>
               ))}
             </div>
 

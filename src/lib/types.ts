@@ -20,9 +20,15 @@ export interface ButtonConfig {
   variant: "default" | "ghost" | "outline";
 }
 
+export interface SocialMediaConfig {
+  backgroundColor: string;
+  iconColor: string;
+}
+
 export interface ThemeColors {
   background: BackgroundConfig;
   button: ButtonConfig;
+  socialMedia: SocialMediaConfig;
   linkColor: string;
   textColor: string;
 }

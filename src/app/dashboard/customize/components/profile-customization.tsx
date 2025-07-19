@@ -27,6 +27,10 @@ const defaultTheme: ThemeColors = {
     shape: "default",
     variant: "default",
   },
+  socialMedia: {
+    backgroundColor: "#1DA1F2",
+    iconColor: "#ffffff",
+  },
   linkColor: "#8b5cf6",
   textColor: "#1f2937",
 };

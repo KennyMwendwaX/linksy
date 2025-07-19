@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { VscColorMode } from "react-icons/vsc";
+import { Type, Share2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ColorButton, ColorPickerModal } from "./color-picker-modal";
 import { ButtonConfig, RGBAValue, ThemeColors } from "@/lib/types";
@@ -165,6 +166,32 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
       setTheme((prev) => ({
         ...prev,
         textColor: rgbaToHex(color),
+      }));
+    },
+    [setTheme]
+  );
+
+  const handleSocialBackgroundChange = useCallback(
+    (color: RGBAValue) => {
+      setTheme((prev) => ({
+        ...prev,
+        socialMedia: {
+          ...prev.socialMedia,
+          backgroundColor: rgbaToHex(color),
+        },
+      }));
+    },
+    [setTheme]
+  );
+
+  const handleSocialIconColorChange = useCallback(
+    (color: RGBAValue) => {
+      setTheme((prev) => ({
+        ...prev,
+        socialMedia: {
+          ...prev.socialMedia,
+          iconColor: rgbaToHex(color),
+        },
       }));
     },
     [setTheme]
@@ -504,35 +531,92 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Text Colors</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Type className="w-5 h-5" />
+            Typography & Colors
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label className="text-sm font-medium mb-2 block">Link Color</Label>
-            <ColorPickerModal
-              title="Link Color"
-              value={theme.linkColor}
-              onChange={handleLinkColorChange}>
-              <ColorButton
-                onClick={() => {}}
-                color={theme.linkColor}
-                label="Link Color"
-              />
-            </ColorPickerModal>
+        <CardContent className="space-y-6">
+          {/* Text Colors Section */}
+          <div className="space-y-4">
+            <div className="text-sm font-medium text-foreground/90 border-b pb-2 flex items-center gap-2">
+              <Type className="w-4 h-4" />
+              Text
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Body Text
+                </Label>
+                <ColorPickerModal
+                  title="Text Color"
+                  value={theme.textColor}
+                  onChange={handleTextColorChange}>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.textColor}
+                    label="Text Color"
+                  />
+                </ColorPickerModal>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Links
+                </Label>
+                <ColorPickerModal
+                  title="Link Color"
+                  value={theme.linkColor}
+                  onChange={handleLinkColorChange}>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.linkColor}
+                    label="Link Color"
+                  />
+                </ColorPickerModal>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <Label className="text-sm font-medium mb-2 block">Text Color</Label>
-            <ColorPickerModal
-              title="Text Color"
-              value={theme.textColor}
-              onChange={handleTextColorChange}>
-              <ColorButton
-                onClick={() => {}}
-                color={theme.textColor}
-                label="Text Color"
-              />
-            </ColorPickerModal>
+          {/* Social Media Section */}
+          <div className="space-y-4">
+            <div className="text-sm font-medium text-foreground/90 border-b pb-2 flex items-center gap-2">
+              <Share2 className="w-4 h-4" />
+              Social Media
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Background
+                </Label>
+                <ColorPickerModal
+                  title="Social Media Background Color"
+                  value={theme.socialMedia.backgroundColor || "#ffffff"}
+                  onChange={handleSocialBackgroundChange}>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.socialMedia.backgroundColor || "#ffffff"}
+                    label="Background"
+                  />
+                </ColorPickerModal>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Icons
+                </Label>
+                <ColorPickerModal
+                  title="Social Media Icon Color"
+                  value={theme.socialMedia.iconColor || "#000000"}
+                  onChange={handleSocialIconColorChange}>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.socialMedia.iconColor || "#000000"}
+                    label="Icons"
+                  />
+                </ColorPickerModal>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
