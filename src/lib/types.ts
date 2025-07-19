@@ -35,10 +35,10 @@ export interface ProfileData {
 }
 
 export interface LinkItem {
-  id: string;
-  title: string;
-  url: string;
-  icon: string;
-  visible: boolean;
+  status: "active" | "inactive" | "expired" | "archived";
+  id: number;
+  name: string;
+  originalUrl: string;
+  slug: string;
   order: number;
 }

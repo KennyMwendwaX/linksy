@@ -21,7 +21,17 @@ import {
 } from "@dnd-kit/sortable";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { LinkItem } from "@/lib/types";
+import { IconComponent } from "@/lib/icon-mapper";
+
+// Original LinkItem interface - no changes needed
+interface LinkItem {
+  status: "active" | "inactive" | "expired" | "archived";
+  id: number;
+  name: string;
+  originalUrl: string;
+  slug: string;
+  order: number;
+}
 
 type LinkTabProps = {
   links: LinkItem[];
@@ -63,37 +73,56 @@ const SortableLinkItem = ({
         className="cursor-grab active:cursor-grabbing">
         <GripVertical className="w-4 h-4 text-muted-foreground" />
       </div>
+
+      {/* Auto-generated icon display */}
+      <div className="w-8 h-8 flex items-center justify-center bg-background rounded border">
+        <IconComponent url={link.originalUrl} size={18} />
+      </div>
+
       <div className="flex-1 space-y-2">
         <div className="flex items-center gap-2">
           <Input
-            value={link.icon}
-            onChange={(e) => onUpdate(link.id, { icon: e.target.value })}
-            className="w-12 h-8 text-center"
-            placeholder="🔗"
-          />
-          <Input
-            value={link.title}
-            onChange={(e) => onUpdate(link.id, { title: e.target.value })}
+            value={link.name}
+            onChange={(e) =>
+              onUpdate(link.id.toString(), { name: e.target.value })
+            }
             className="flex-1 h-8"
-            placeholder="Link title"
+            placeholder="Link name"
           />
         </div>
-        <Input
-          value={link.url}
-          onChange={(e) => onUpdate(link.id, { url: e.target.value })}
-          className="w-full h-8"
-          placeholder="https://example.com"
-        />
+        <div className="flex items-center gap-2">
+          <Input
+            value={link.originalUrl}
+            onChange={(e) =>
+              onUpdate(link.id.toString(), { originalUrl: e.target.value })
+            }
+            className="flex-1 h-8"
+            placeholder="https://example.com"
+          />
+          <Input
+            value={link.slug}
+            onChange={(e) =>
+              onUpdate(link.id.toString(), { slug: e.target.value })
+            }
+            className="w-32 h-8"
+            placeholder="slug"
+          />
+        </div>
       </div>
+
       <div className="flex items-center gap-2">
         <Switch
-          checked={link.visible}
-          onCheckedChange={(checked) => onUpdate(link.id, { visible: checked })}
+          checked={link.status === "active"}
+          onCheckedChange={(checked) =>
+            onUpdate(link.id.toString(), {
+              status: checked ? "active" : "inactive",
+            })
+          }
         />
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => onDelete(link.id)}
+          onClick={() => onDelete(link.id.toString())}
           className="text-destructive hover:text-destructive">
           <Trash2 className="w-4 h-4" />
         </Button>
@@ -113,7 +142,9 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
   const handleLinkUpdate = useCallback(
     (id: string, updates: Partial<LinkItem>) => {
       setLinks((prev) =>
-        prev.map((link) => (link.id === id ? { ...link, ...updates } : link))
+        prev.map((link) =>
+          link.id.toString() === id ? { ...link, ...updates } : link
+        )
       );
     },
     [setLinks]
@@ -121,18 +152,18 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
 
   const handleLinkDelete = useCallback(
     (id: string) => {
-      setLinks((prev) => prev.filter((link) => link.id !== id));
+      setLinks((prev) => prev.filter((link) => link.id.toString() !== id));
     },
     [setLinks]
   );
 
   const handleAddLink = useCallback(() => {
     const newLink: LinkItem = {
-      id: Date.now().toString(),
-      title: "New Link",
-      url: "https://example.com",
-      icon: "🔗",
-      visible: true,
+      id: Date.now(),
+      name: "New Link",
+      originalUrl: "https://example.com",
+      slug: `link-${Date.now()}`,
+      status: "active",
       order: links.length + 1,
     };
     setLinks((prev) => [...prev, newLink]);

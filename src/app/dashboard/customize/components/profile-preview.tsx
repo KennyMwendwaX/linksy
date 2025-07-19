@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ThemeColors, ProfileData, LinkItem } from "@/lib/types";
 import { cn, getShapeClasses } from "@/lib/utils";
+import { IconComponent } from "@/lib/icon-mapper";
 import { useMemo } from "react";
 
 type ProfilePreviewProps = {
@@ -46,9 +47,7 @@ export default function ProfilePreview({
     return { backgroundColor: theme.background.color };
   }, [theme]);
 
-  const visibleLinks = links
-    .filter((link) => link.visible)
-    .sort((a, b) => a.order - b.order);
+  const activeLinks = links.filter((link) => link.status === "active");
 
   const buttonShapeClasses = getShapeClasses(theme.button.shape);
 
@@ -126,7 +125,7 @@ export default function ProfilePreview({
 
             {/* Links Section */}
             <div className="space-y-3">
-              {visibleLinks.map((link) => (
+              {activeLinks.map((link) => (
                 <div key={link.id} className="group relative">
                   <Button
                     variant={theme.button.variant}
@@ -150,35 +149,16 @@ export default function ProfilePreview({
                     {/* Link Content */}
                     <div className="flex items-center gap-3 w-full">
                       <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center">
-                        {link.icon}
+                        <IconComponent url={link.originalUrl} size={20} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-medium truncate">{link.title}</div>
-                      </div>
-                      <div className="flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24">
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
+                        <div className="font-medium truncate">{link.name}</div>
                       </div>
                     </div>
 
                     {/* Click Animation Overlay */}
                     <div className="absolute inset-0 bg-white/10 opacity-0 group-active:opacity-100 transition-opacity pointer-events-none" />
                   </Button>
-
-                  {/* Click Counter Badge */}
-                  <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-medium shadow-sm">
-                    {Math.floor(Math.random() * 999) + 1}
-                  </div>
                 </div>
               ))}
             </div>
