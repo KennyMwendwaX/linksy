@@ -146,18 +146,20 @@ export default function ProfileCustomization() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 lg:px-6 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-2">Customize Your Profile</h1>
-          <p className="text-muted-foreground">
-            Personalize your public profile page with colors, content, and link
-            organization.
-          </p>
-        </div>
-
+      <div className="container mx-auto px-4 lg:px-6 py-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-start">
           {/* Customization Form */}
           <div className="space-y-6">
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold mb-2">
+                Customize Your Profile
+              </h1>
+              <p className="text-muted-foreground">
+                Personalize your public profile page with colors, content, and
+                link organization.
+              </p>
+            </div>
+
             <Tabs defaultValue="appearance" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="appearance" className="gap-2">

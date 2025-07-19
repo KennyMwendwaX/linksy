@@ -64,108 +64,83 @@ const SortableLinkItem = ({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-3 p-4 bg-secondary/50 rounded-lg border">
+      className="group flex items-start gap-4 p-4 bg-background rounded-lg border hover:shadow-sm transition-shadow">
+      {/* Drag handle */}
       <div
         {...attributes}
         {...listeners}
-        className="cursor-grab active:cursor-grabbing">
+        className="flex-shrink-0 cursor-grab active:cursor-grabbing mt-1">
         <GripVertical className="w-4 h-4 text-muted-foreground" />
       </div>
 
-      {/* Auto-generated icon display */}
-      <div className="w-10 h-10 flex items-center justify-center bg-background rounded-md border shadow-sm">
+      {/* Icon */}
+      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-background rounded-md border">
         <IconComponent url={link.originalUrl} size={20} />
       </div>
 
-      <div className="flex-1 space-y-3">
-        {/* Link Name and Display Type Row */}
-        <div className="flex items-center gap-3">
-          <Input
-            value={link.name}
-            onChange={(e) =>
-              onUpdate(link.id.toString(), { name: e.target.value })
-            }
-            className="flex-1 h-9"
-            placeholder="Link name"
-          />
-          <Select
-            value={link.displayType}
-            onValueChange={(value: "button" | "social") =>
-              onUpdate(link.id.toString(), { displayType: value })
-            }>
-            <SelectTrigger className="w-32 h-9">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="button">
-                <div className="flex items-center gap-2">
-                  <Link2 className="w-4 h-4" />
-                  Button
-                </div>
-              </SelectItem>
-              <SelectItem value="social">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  Social
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      {/* Main content */}
+      <div className="flex-1 min-w-0 space-y-2">
+        {/* Name */}
+        <Input
+          value={link.name}
+          onChange={(e) =>
+            onUpdate(link.id.toString(), { name: e.target.value })
+          }
+          className="w-full"
+          placeholder="Link name"
+        />
 
-        {/* URL and Slug Row */}
-        <div className="flex items-center gap-3">
-          <Input
-            value={link.originalUrl}
-            onChange={(e) =>
-              onUpdate(link.id.toString(), { originalUrl: e.target.value })
-            }
-            className="flex-1 h-9"
-            placeholder="https://example.com"
-          />
-          <Input
-            value={link.slug}
-            onChange={(e) =>
-              onUpdate(link.id.toString(), { slug: e.target.value })
-            }
-            className="w-28 h-9"
-            placeholder="slug"
-          />
-        </div>
+        {/* URL */}
+        <Input
+          value={link.originalUrl}
+          onChange={(e) =>
+            onUpdate(link.id.toString(), { originalUrl: e.target.value })
+          }
+          className="w-full"
+          placeholder="https://example.com"
+        />
 
-        {/* Display Type Indicator */}
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          {link.displayType === "button" ? (
-            <>
-              <Link2 className="w-3 h-3" />
-              <span>Will appear as a button link</span>
-            </>
-          ) : (
-            <>
-              <Users className="w-3 h-3" />
-              <span>Will appear in social media row</span>
-            </>
-          )}
-        </div>
+        <Select
+          value={link.displayType}
+          onValueChange={(value: "button" | "social") =>
+            onUpdate(link.id.toString(), { displayType: value })
+          }>
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="button">
+              <div className="flex items-center gap-1">
+                <Link2 className="w-3 h-3" />
+                <span className="text-xs">Button</span>
+              </div>
+            </SelectItem>
+            <SelectItem value="social">
+              <div className="flex items-center gap-1">
+                <Users className="w-3 h-3" />
+                <span className="text-xs">Social</span>
+              </div>
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">Active</span>
-          <Switch
-            checked={link.status === "active"}
-            onCheckedChange={(checked) =>
-              onUpdate(link.id.toString(), {
-                status: checked ? "active" : "inactive",
-              })
-            }
-          />
-        </div>
+      {/* Actions */}
+      <div className="flex-shrink-0 flex flex-col items-center gap-2">
+        <Switch
+          disabled={link.status !== "active"}
+          checked={link.status === "active"}
+          onCheckedChange={(checked) =>
+            onUpdate(link.id.toString(), {
+              status: checked ? "active" : "inactive",
+            })
+          }
+        />
         <Button
           variant="ghost"
           size="sm"
           onClick={() => onDelete(link.id.toString())}
-          className="text-destructive hover:text-destructive">
+          className="text-destructive hover:text-destructive h-8 w-8 p-0">
           <Trash2 className="w-4 h-4" />
         </Button>
       </div>
@@ -207,7 +182,7 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
       slug: `link-${Date.now()}`,
       status: "active",
       order: links.length + 1,
-      displayType: "button", // Default to button
+      displayType: "button",
     };
     setLinks((prev) => [...prev, newLink]);
   }, [links.length, setLinks]);
@@ -223,7 +198,6 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
 
           const newLinks = arrayMove(prev, oldIndex, newIndex);
 
-          // Update the order property to reflect the new positions
           return newLinks.map((link, index) => ({
             ...link,
             order: index + 1,
@@ -234,10 +208,7 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
     [setLinks]
   );
 
-  // Sort links by order before rendering
   const sortedLinks = [...links].sort((a, b) => a.order - b.order);
-
-  // Get counts for each type
   const buttonLinks = sortedLinks.filter(
     (link) => link.displayType === "button"
   );
@@ -270,30 +241,25 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
             <p className="text-sm">Click &quot;Add Link&quot; to get started</p>
           </div>
         ) : (
-          <>
-            <div className="text-sm text-muted-foreground mb-3">
-              Drag and drop to reorder links within their display type
-            </div>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}>
-              <SortableContext
-                items={sortedLinks.map((link) => link.id)}
-                strategy={verticalListSortingStrategy}>
-                <div className="space-y-3">
-                  {sortedLinks.map((link) => (
-                    <SortableLinkItem
-                      key={link.id}
-                      link={link}
-                      onUpdate={handleLinkUpdate}
-                      onDelete={handleLinkDelete}
-                    />
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
-          </>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}>
+            <SortableContext
+              items={sortedLinks.map((link) => link.id)}
+              strategy={verticalListSortingStrategy}>
+              <div className="space-y-3">
+                {sortedLinks.map((link) => (
+                  <SortableLinkItem
+                    key={link.id}
+                    link={link}
+                    onUpdate={handleLinkUpdate}
+                    onDelete={handleLinkDelete}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
         )}
       </CardContent>
     </Card>
