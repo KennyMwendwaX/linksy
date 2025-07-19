@@ -11,7 +11,7 @@ import { VscColorMode } from "react-icons/vsc";
 import { Type, Share2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ColorButton, ColorPickerModal } from "./color-picker-modal";
-import { ButtonConfig, RGBAValue, ThemeConfig } from "@/lib/types";
+import { ButtonConfig, RGBAValue, ThemeConfig, Typography } from "@/lib/types";
 import { rgbaToHex } from "@/lib/utils";
 import { useCallback } from "react";
 
@@ -151,21 +151,33 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
     [setTheme]
   );
 
-  const handleLinkColorChange = useCallback(
-    (color: RGBAValue) => {
+  const handleTextColorChange = useCallback(
+    (text: keyof ThemeConfig["text"], color: RGBAValue) => {
       setTheme((prev) => ({
         ...prev,
-        linkColor: rgbaToHex(color),
+        text: {
+          ...prev.text,
+          [text]: {
+            ...prev.text.profileName,
+            color: rgbaToHex(color),
+          },
+        },
       }));
     },
     [setTheme]
   );
 
-  const handleTextColorChange = useCallback(
-    (color: RGBAValue) => {
+  const handleTextSizeChange = useCallback(
+    (text: keyof ThemeConfig["text"], size: Typography["size"]) => {
       setTheme((prev) => ({
         ...prev,
-        textColor: rgbaToHex(color),
+        text: {
+          ...prev.text,
+          [text]: {
+            ...prev.text.profileName,
+            size: size,
+          },
+        },
       }));
     },
     [setTheme]
@@ -546,21 +558,48 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-xs font-medium text-muted-foreground">
-                  Body Text
+                  Profile Name
                 </Label>
                 <ColorPickerModal
                   title="Text Color"
-                  value={theme.textColor}
-                  onChange={handleTextColorChange}>
+                  value={theme.text.profileName.color}
+                  onChange={(color) =>
+                    handleTextColorChange("profileName", color)
+                  }>
                   <ColorButton
                     onClick={() => {}}
-                    color={theme.textColor}
+                    color={theme.text.profileName.color}
                     label="Text Color"
                   />
                 </ColorPickerModal>
               </div>
 
               <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Text Size
+                </Label>
+                <Select
+                  value={theme.text.profileName.size}
+                  onValueChange={(value) =>
+                    handleTextSizeChange(
+                      "profileName",
+                      value as Typography["size"]
+                    )
+                  }>
+                  <SelectTrigger className="h-9 w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="base">Default</SelectItem>
+                    <SelectItem value="sm">Small</SelectItem>
+                    <SelectItem value="lg">Large</SelectItem>
+                    <SelectItem value="xl">XL</SelectItem>
+                    <SelectItem value="2xl">2XL</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* <div className="space-y-2">
                 <Label className="text-xs font-medium text-muted-foreground">
                   Links
                 </Label>
@@ -574,7 +613,7 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                     label="Link Color"
                   />
                 </ColorPickerModal>
-              </div>
+              </div> */}
             </div>
           </div>
 

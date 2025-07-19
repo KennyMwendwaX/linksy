@@ -21,7 +21,7 @@ export interface ButtonConfig {
 }
 
 export interface Typography {
-  size: "sm" | "default" | "lg" | "xl" | "2xl";
+  size: "sm" | "base" | "lg" | "xl" | "2xl";
   color: string;
 }
 
