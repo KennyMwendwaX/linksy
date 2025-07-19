@@ -26,8 +26,8 @@ export interface Typography {
 }
 
 export interface TextConfig {
-  profileName: Typography;
-  profileUsername: Typography;
+  name: Typography;
+  username: Typography;
   bio: Typography;
 }
 

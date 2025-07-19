@@ -604,13 +604,11 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                 </Label>
                 <ColorPickerModal
                   title="Profile Name"
-                  value={theme.text.profileName.color}
-                  onChange={(color) =>
-                    handleTextColorChange("profileName", color)
-                  }>
+                  value={theme.text.name.color}
+                  onChange={(color) => handleTextColorChange("name", color)}>
                   <ColorButton
                     onClick={() => {}}
-                    color={theme.text.profileName.color}
+                    color={theme.text.name.color}
                     label="Profile Name Color"
                   />
                 </ColorPickerModal>
@@ -620,12 +618,9 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                   Text Size
                 </Label>
                 <Select
-                  value={theme.text.profileName.size}
+                  value={theme.text.name.size}
                   onValueChange={(value) =>
-                    handleTextSizeChange(
-                      "profileName",
-                      value as Typography["size"]
-                    )
+                    handleTextSizeChange("name", value as Typography["size"])
                   }>
                   <SelectTrigger className="h-9 w-full">
                     <SelectValue />
@@ -647,13 +642,13 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                 </Label>
                 <ColorPickerModal
                   title="Profile Username"
-                  value={theme.text.profileUsername.color}
+                  value={theme.text.username.color}
                   onChange={(color) =>
-                    handleTextColorChange("profileUsername", color)
+                    handleTextColorChange("username", color)
                   }>
                   <ColorButton
                     onClick={() => {}}
-                    color={theme.text.profileUsername.color}
+                    color={theme.text.username.color}
                     label="Profile Username Color"
                   />
                 </ColorPickerModal>
@@ -663,10 +658,10 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                   Text Size
                 </Label>
                 <Select
-                  value={theme.text.profileUsername.size}
+                  value={theme.text.username.size}
                   onValueChange={(value) =>
                     handleTextSizeChange(
-                      "profileUsername",
+                      "username",
                       value as Typography["size"]
                     )
                   }>

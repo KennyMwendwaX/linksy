@@ -79,20 +79,20 @@ export default function ProfilePreview({
                 <div>
                   <h3
                     style={{
-                      color: theme.text.profileName.color,
+                      color: theme.text.name.color,
                     }}
                     className={cn(
-                      `text-${theme.text.profileName.size}`,
+                      `text-${theme.text.name.size}`,
                       "font-bold tracking-tight"
                     )}>
                     {profile.name}
                   </h3>
                   <p
                     style={{
-                      color: theme.text.profileUsername.color,
+                      color: theme.text.username.color,
                     }}
                     className={cn(
-                      `text-${theme.text.profileUsername.size}`,
+                      `text-${theme.text.username.size}`,
                       "opacity-75 font-medium"
                     )}>
                     @{profile.username}

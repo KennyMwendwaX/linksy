@@ -32,11 +32,11 @@ const defaultTheme: ThemeConfig = {
     iconColor: "#ffffff",
   },
   text: {
-    profileName: {
+    name: {
       color: "#1f2937",
       size: "2xl",
     },
-    profileUsername: {
+    username: {
       color: "#1f2937",
       size: "sm",
     },
