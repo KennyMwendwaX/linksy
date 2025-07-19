@@ -158,7 +158,7 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
         text: {
           ...prev.text,
           [text]: {
-            ...prev.text.profileName,
+            ...prev.text[text],
             color: rgbaToHex(color),
           },
         },
@@ -174,7 +174,7 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
         text: {
           ...prev.text,
           [text]: {
-            ...prev.text.profileName,
+            ...prev.text[text],
             size: size,
           },
         },
@@ -556,12 +556,13 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
               Text
             </div>
             <div className="grid grid-cols-2 gap-4">
+              {/* Profile Name */}
               <div className="space-y-2">
                 <Label className="text-xs font-medium text-muted-foreground">
                   Profile Name
                 </Label>
                 <ColorPickerModal
-                  title="Text Color"
+                  title="Profile Name"
                   value={theme.text.profileName.color}
                   onChange={(color) =>
                     handleTextColorChange("profileName", color)
@@ -569,11 +570,10 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                   <ColorButton
                     onClick={() => {}}
                     color={theme.text.profileName.color}
-                    label="Text Color"
+                    label="Profile Name Color"
                   />
                 </ColorPickerModal>
               </div>
-
               <div className="space-y-2">
                 <Label className="text-xs font-medium text-muted-foreground">
                   Text Size
@@ -599,21 +599,48 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                 </Select>
               </div>
 
-              {/* <div className="space-y-2">
+              {/* Profile Username */}
+              <div className="space-y-2">
                 <Label className="text-xs font-medium text-muted-foreground">
-                  Links
+                  Profile Username
                 </Label>
                 <ColorPickerModal
-                  title="Link Color"
-                  value={theme.linkColor}
-                  onChange={handleLinkColorChange}>
+                  title="Profile Username"
+                  value={theme.text.profileUsername.color}
+                  onChange={(color) =>
+                    handleTextColorChange("profileUsername", color)
+                  }>
                   <ColorButton
                     onClick={() => {}}
-                    color={theme.linkColor}
-                    label="Link Color"
+                    color={theme.text.profileUsername.color}
+                    label="Profile Username Color"
                   />
                 </ColorPickerModal>
-              </div> */}
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Text Size
+                </Label>
+                <Select
+                  value={theme.text.profileUsername.size}
+                  onValueChange={(value) =>
+                    handleTextSizeChange(
+                      "profileUsername",
+                      value as Typography["size"]
+                    )
+                  }>
+                  <SelectTrigger className="h-9 w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="base">Default</SelectItem>
+                    <SelectItem value="sm">Small</SelectItem>
+                    <SelectItem value="lg">Large</SelectItem>
+                    <SelectItem value="xl">XL</SelectItem>
+                    <SelectItem value="2xl">2XL</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
