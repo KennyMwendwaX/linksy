@@ -11,13 +11,13 @@ import { VscColorMode } from "react-icons/vsc";
 import { Type, Share2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ColorButton, ColorPickerModal } from "./color-picker-modal";
-import { ButtonConfig, RGBAValue, ThemeColors } from "@/lib/types";
+import { ButtonConfig, RGBAValue, ThemeConfig } from "@/lib/types";
 import { rgbaToHex } from "@/lib/utils";
 import { useCallback } from "react";
 
 type AppearanceTabProps = {
-  theme: ThemeColors;
-  setTheme: React.Dispatch<React.SetStateAction<ThemeColors>>;
+  theme: ThemeConfig;
+  setTheme: React.Dispatch<React.SetStateAction<ThemeConfig>>;
 };
 
 const linearDirections = [

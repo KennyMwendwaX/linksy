@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { ThemeColors, ProfileData, LinkItem } from "@/lib/types";
+import { ThemeConfig, ProfileData, LinkItem } from "@/lib/types";
 import { cn, getShapeClasses } from "@/lib/utils";
 import { IconComponent } from "@/lib/icon-mapper";
 import { useMemo } from "react";
 
 type ProfilePreviewProps = {
-  theme: ThemeColors;
+  theme: ThemeConfig;
   profile: ProfileData;
   links: LinkItem[];
 };
@@ -68,7 +68,6 @@ export default function ProfilePreview({
             className="rounded-lg border p-6 space-y-6 min-h-[500px] max-h-[600px] overflow-y-auto"
             style={{
               ...backgroundStyle,
-              color: theme.textColor,
             }}>
             {/* Profile Header */}
             <div className="text-center space-y-4">
@@ -78,18 +77,37 @@ export default function ProfilePreview({
 
               <div className="space-y-2">
                 <div>
-                  <h3 className="text-xl font-bold tracking-tight">
+                  <h3
+                    style={{
+                      color: theme.text.profileName.color,
+                    }}
+                    className={cn(
+                      `text-${theme.text.profileName.size}`,
+                      "font-bold tracking-tight"
+                    )}>
                     {profile.name}
                   </h3>
-                  <p className="text-sm opacity-75 font-medium">
+                  <p
+                    style={{
+                      color: theme.text.profileUsername.color,
+                    }}
+                    className={cn(
+                      `text-${theme.text.profileUsername.size}`,
+                      "opacity-75 font-medium"
+                    )}>
                     @{profile.username}
                   </p>
                 </div>
-                {profile.bio && (
-                  <p className="text-sm opacity-90 max-w-sm mx-auto leading-relaxed px-2">
-                    {profile.bio}
-                  </p>
-                )}
+                <p
+                  style={{
+                    color: theme.text.bio.color,
+                  }}
+                  className={cn(
+                    theme.text.bio.size,
+                    `text-${"opacity-90 max-w-sm mx-auto leading-relaxed px-2"}`
+                  )}>
+                  {profile.bio}
+                </p>
               </div>
             </div>
 

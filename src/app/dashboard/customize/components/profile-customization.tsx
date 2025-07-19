@@ -4,13 +4,13 @@ import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Palette, Link2 } from "lucide-react";
-import { LinkItem, ProfileData, ThemeColors } from "@/lib/types";
+import { LinkItem, ProfileData, ThemeConfig } from "@/lib/types";
 import ProfilePreview from "./profile-preview";
 import AppearanceTab from "./appearance-tab";
 import ProfileTab from "./profile-tab";
 import LinksTab from "./links-tab";
 
-const defaultTheme: ThemeColors = {
+const defaultTheme: ThemeConfig = {
   background: {
     color: "#ffffff",
     gradient: {
@@ -31,8 +31,20 @@ const defaultTheme: ThemeColors = {
     backgroundColor: "#1DA1F2",
     iconColor: "#ffffff",
   },
-  linkColor: "#8b5cf6",
-  textColor: "#1f2937",
+  text: {
+    profileName: {
+      color: "#1f2937",
+      size: "2xl",
+    },
+    profileUsername: {
+      color: "#1f2937",
+      size: "sm",
+    },
+    bio: {
+      color: "#1f2937",
+      size: "sm",
+    },
+  },
 };
 
 const defaultProfile: ProfileData = {
@@ -109,12 +121,12 @@ const defaultLinks: LinkItem[] = [
 ];
 
 export default function ProfileCustomization() {
-  const [theme, setTheme] = useState<ThemeColors>(defaultTheme);
+  const [theme, setTheme] = useState<ThemeConfig>(defaultTheme);
   const [profile, setProfile] = useState<ProfileData>(defaultProfile);
   const [links, setLinks] = useState<LinkItem[]>(defaultLinks);
 
   const stableSetTheme = useCallback(
-    (value: React.SetStateAction<ThemeColors>) => {
+    (value: React.SetStateAction<ThemeConfig>) => {
       setTheme(value);
     },
     []

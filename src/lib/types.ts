@@ -20,17 +20,27 @@ export interface ButtonConfig {
   variant: "default" | "ghost" | "outline";
 }
 
+export interface Typography {
+  size: "sm" | "default" | "lg" | "xl" | "2xl";
+  color: string;
+}
+
+export interface TextConfig {
+  profileName: Typography;
+  profileUsername: Typography;
+  bio: Typography;
+}
+
 export interface SocialMediaConfig {
   backgroundColor: string;
   iconColor: string;
 }
 
-export interface ThemeColors {
+export interface ThemeConfig {
   background: BackgroundConfig;
   button: ButtonConfig;
   socialMedia: SocialMediaConfig;
-  linkColor: string;
-  textColor: string;
+  text: TextConfig;
 }
 
 export interface ProfileData {
