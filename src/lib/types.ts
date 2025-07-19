@@ -41,4 +41,5 @@ export interface LinkItem {
   originalUrl: string;
   slug: string;
   order: number;
+  displayType: "button" | "social";
 }

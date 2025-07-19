@@ -2,7 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { GripVertical, Plus, Trash2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { GripVertical, Plus, Trash2, Link2, Users } from "lucide-react";
 import { useCallback } from "react";
 import {
   DndContext,
@@ -22,16 +29,7 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconComponent } from "@/lib/icon-mapper";
-
-// Original LinkItem interface - no changes needed
-interface LinkItem {
-  status: "active" | "inactive" | "expired" | "archived";
-  id: number;
-  name: string;
-  originalUrl: string;
-  slug: string;
-  order: number;
-}
+import { LinkItem } from "@/lib/types";
 
 type LinkTabProps = {
   links: LinkItem[];
@@ -66,7 +64,7 @@ const SortableLinkItem = ({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-3 p-3 bg-secondary/50 rounded-lg">
+      className="flex items-center gap-3 p-4 bg-secondary/50 rounded-lg border">
       <div
         {...attributes}
         {...listeners}
@@ -75,28 +73,54 @@ const SortableLinkItem = ({
       </div>
 
       {/* Auto-generated icon display */}
-      <div className="w-8 h-8 flex items-center justify-center bg-background rounded border">
-        <IconComponent url={link.originalUrl} size={18} />
+      <div className="w-10 h-10 flex items-center justify-center bg-background rounded-md border shadow-sm">
+        <IconComponent url={link.originalUrl} size={20} />
       </div>
 
-      <div className="flex-1 space-y-2">
-        <div className="flex items-center gap-2">
+      <div className="flex-1 space-y-3">
+        {/* Link Name and Display Type Row */}
+        <div className="flex items-center gap-3">
           <Input
             value={link.name}
             onChange={(e) =>
               onUpdate(link.id.toString(), { name: e.target.value })
             }
-            className="flex-1 h-8"
+            className="flex-1 h-9"
             placeholder="Link name"
           />
+          <Select
+            value={link.displayType}
+            onValueChange={(value: "button" | "social") =>
+              onUpdate(link.id.toString(), { displayType: value })
+            }>
+            <SelectTrigger className="w-32 h-9">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="button">
+                <div className="flex items-center gap-2">
+                  <Link2 className="w-4 h-4" />
+                  Button
+                </div>
+              </SelectItem>
+              <SelectItem value="social">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Social
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <div className="flex items-center gap-2">
+
+        {/* URL and Slug Row */}
+        <div className="flex items-center gap-3">
           <Input
             value={link.originalUrl}
             onChange={(e) =>
               onUpdate(link.id.toString(), { originalUrl: e.target.value })
             }
-            className="flex-1 h-8"
+            className="flex-1 h-9"
             placeholder="https://example.com"
           />
           <Input
@@ -104,21 +128,39 @@ const SortableLinkItem = ({
             onChange={(e) =>
               onUpdate(link.id.toString(), { slug: e.target.value })
             }
-            className="w-32 h-8"
+            className="w-28 h-9"
             placeholder="slug"
           />
         </div>
+
+        {/* Display Type Indicator */}
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          {link.displayType === "button" ? (
+            <>
+              <Link2 className="w-3 h-3" />
+              <span>Will appear as a button link</span>
+            </>
+          ) : (
+            <>
+              <Users className="w-3 h-3" />
+              <span>Will appear in social media row</span>
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Switch
-          checked={link.status === "active"}
-          onCheckedChange={(checked) =>
-            onUpdate(link.id.toString(), {
-              status: checked ? "active" : "inactive",
-            })
-          }
-        />
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted-foreground">Active</span>
+          <Switch
+            checked={link.status === "active"}
+            onCheckedChange={(checked) =>
+              onUpdate(link.id.toString(), {
+                status: checked ? "active" : "inactive",
+              })
+            }
+          />
+        </div>
         <Button
           variant="ghost"
           size="sm"
@@ -165,6 +207,7 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
       slug: `link-${Date.now()}`,
       status: "active",
       order: links.length + 1,
+      displayType: "button", // Default to button
     };
     setLinks((prev) => [...prev, newLink]);
   }, [links.length, setLinks]);
@@ -194,37 +237,64 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
   // Sort links by order before rendering
   const sortedLinks = [...links].sort((a, b) => a.order - b.order);
 
+  // Get counts for each type
+  const buttonLinks = sortedLinks.filter(
+    (link) => link.displayType === "button"
+  );
+  const socialLinks = sortedLinks.filter(
+    (link) => link.displayType === "social"
+  );
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          Link Management
+          <div className="space-y-1">
+            <div>Link Management</div>
+            <div className="text-sm font-normal text-muted-foreground">
+              {buttonLinks.length} button links • {socialLinks.length} social
+              links
+            </div>
+          </div>
           <Button onClick={handleAddLink} size="sm" className="gap-2">
             <Plus className="w-4 h-4" />
             Add Link
           </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}>
-          <SortableContext
-            items={sortedLinks.map((link) => link.id)}
-            strategy={verticalListSortingStrategy}>
-            <div className="space-y-3">
-              {sortedLinks.map((link) => (
-                <SortableLinkItem
-                  key={link.id}
-                  link={link}
-                  onUpdate={handleLinkUpdate}
-                  onDelete={handleLinkDelete}
-                />
-              ))}
+      <CardContent className="space-y-4">
+        {sortedLinks.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground">
+            <Link2 className="w-12 h-12 mx-auto mb-3 opacity-50" />
+            <p>No links added yet</p>
+            <p className="text-sm">Click &quot;Add Link&quot; to get started</p>
+          </div>
+        ) : (
+          <>
+            <div className="text-sm text-muted-foreground mb-3">
+              Drag and drop to reorder links within their display type
             </div>
-          </SortableContext>
-        </DndContext>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}>
+              <SortableContext
+                items={sortedLinks.map((link) => link.id)}
+                strategy={verticalListSortingStrategy}>
+                <div className="space-y-3">
+                  {sortedLinks.map((link) => (
+                    <SortableLinkItem
+                      key={link.id}
+                      link={link}
+                      onUpdate={handleLinkUpdate}
+                      onDelete={handleLinkDelete}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+          </>
+        )}
       </CardContent>
     </Card>
   );

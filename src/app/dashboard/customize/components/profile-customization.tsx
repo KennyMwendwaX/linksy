@@ -46,6 +46,7 @@ const defaultLinks: LinkItem[] = [
     slug: "google",
     status: "active",
     order: 1,
+    displayType: "button", // Main link as button
   },
   {
     id: 2,
@@ -54,6 +55,7 @@ const defaultLinks: LinkItem[] = [
     slug: "youtube",
     status: "active",
     order: 2,
+    displayType: "button", // Main link as button
   },
   {
     id: 3,
@@ -62,6 +64,7 @@ const defaultLinks: LinkItem[] = [
     slug: "x",
     status: "active",
     order: 3,
+    displayType: "social", // Social media as social icon
   },
   {
     id: 4,
@@ -70,6 +73,7 @@ const defaultLinks: LinkItem[] = [
     slug: "linkedin",
     status: "active",
     order: 4,
+    displayType: "social", // Social media as social icon
   },
   {
     id: 5,
@@ -78,22 +82,25 @@ const defaultLinks: LinkItem[] = [
     slug: "facebook",
     status: "inactive",
     order: 5,
+    displayType: "social", // Social media as social icon
   },
   {
     id: 6,
     name: "Instagram Profile",
     originalUrl: "https://instagram.com/yourprofile",
     slug: "instagram",
-    status: "inactive",
+    status: "active",
     order: 6,
+    displayType: "social", // Social media as social icon
   },
   {
     id: 7,
     name: "Portfolio Website",
     originalUrl: "https://yourname.dev",
     slug: "portfolio",
-    status: "expired",
+    status: "active",
     order: 7,
+    displayType: "button", // Portfolio as button
   },
 ];
 
