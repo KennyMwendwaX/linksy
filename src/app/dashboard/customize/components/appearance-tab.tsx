@@ -151,6 +151,32 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
     [setTheme]
   );
 
+  const handleSocialBackgroundChange = useCallback(
+    (color: RGBAValue) => {
+      setTheme((prev) => ({
+        ...prev,
+        socialMedia: {
+          ...prev.socialMedia,
+          backgroundColor: rgbaToHex(color),
+        },
+      }));
+    },
+    [setTheme]
+  );
+
+  const handleSocialIconColorChange = useCallback(
+    (color: RGBAValue) => {
+      setTheme((prev) => ({
+        ...prev,
+        socialMedia: {
+          ...prev.socialMedia,
+          iconColor: rgbaToHex(color),
+        },
+      }));
+    },
+    [setTheme]
+  );
+
   const handleTextColorChange = useCallback(
     (text: keyof ThemeConfig["text"], color: RGBAValue) => {
       setTheme((prev) => ({
@@ -177,32 +203,6 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
             ...prev.text[text],
             size: size,
           },
-        },
-      }));
-    },
-    [setTheme]
-  );
-
-  const handleSocialBackgroundChange = useCallback(
-    (color: RGBAValue) => {
-      setTheme((prev) => ({
-        ...prev,
-        socialMedia: {
-          ...prev.socialMedia,
-          backgroundColor: rgbaToHex(color),
-        },
-      }));
-    },
-    [setTheme]
-  );
-
-  const handleSocialIconColorChange = useCallback(
-    (color: RGBAValue) => {
-      setTheme((prev) => ({
-        ...prev,
-        socialMedia: {
-          ...prev.socialMedia,
-          iconColor: rgbaToHex(color),
         },
       }));
     },
@@ -549,6 +549,47 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Social Media Section */}
+          <div className="space-y-4">
+            <div className="text-sm font-medium text-foreground/90 border-b pb-2 flex items-center gap-2">
+              <Share2 className="w-4 h-4" />
+              Social Media
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Background
+                </Label>
+                <ColorPickerModal
+                  title="Social Media Background Color"
+                  value={theme.socialMedia.backgroundColor || "#ffffff"}
+                  onChange={handleSocialBackgroundChange}>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.socialMedia.backgroundColor || "#ffffff"}
+                    label="Background"
+                  />
+                </ColorPickerModal>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Icons
+                </Label>
+                <ColorPickerModal
+                  title="Social Media Icon Color"
+                  value={theme.socialMedia.iconColor || "#000000"}
+                  onChange={handleSocialIconColorChange}>
+                  <ColorButton
+                    onClick={() => {}}
+                    color={theme.socialMedia.iconColor || "#000000"}
+                    label="Icons"
+                  />
+                </ColorPickerModal>
+              </div>
+            </div>
+          </div>
+
           {/* Text Colors Section */}
           <div className="space-y-4">
             <div className="text-sm font-medium text-foreground/90 border-b pb-2 flex items-center gap-2">
@@ -641,46 +682,43 @@ export default function AppearanceTab({ theme, setTheme }: AppearanceTabProps) {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-          </div>
 
-          {/* Social Media Section */}
-          <div className="space-y-4">
-            <div className="text-sm font-medium text-foreground/90 border-b pb-2 flex items-center gap-2">
-              <Share2 className="w-4 h-4" />
-              Social Media
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+              {/* Profile Bio */}
               <div className="space-y-2">
                 <Label className="text-xs font-medium text-muted-foreground">
-                  Background
+                  Profile Bio
                 </Label>
                 <ColorPickerModal
-                  title="Social Media Background Color"
-                  value={theme.socialMedia.backgroundColor || "#ffffff"}
-                  onChange={handleSocialBackgroundChange}>
+                  title="Profile Bio"
+                  value={theme.text.bio.color}
+                  onChange={(color) => handleTextColorChange("bio", color)}>
                   <ColorButton
                     onClick={() => {}}
-                    color={theme.socialMedia.backgroundColor || "#ffffff"}
-                    label="Background"
+                    color={theme.text.bio.color}
+                    label="Profile Bio Color"
                   />
                 </ColorPickerModal>
               </div>
-
               <div className="space-y-2">
                 <Label className="text-xs font-medium text-muted-foreground">
-                  Icons
+                  Text Size
                 </Label>
-                <ColorPickerModal
-                  title="Social Media Icon Color"
-                  value={theme.socialMedia.iconColor || "#000000"}
-                  onChange={handleSocialIconColorChange}>
-                  <ColorButton
-                    onClick={() => {}}
-                    color={theme.socialMedia.iconColor || "#000000"}
-                    label="Icons"
-                  />
-                </ColorPickerModal>
+                <Select
+                  value={theme.text.bio.size}
+                  onValueChange={(value) =>
+                    handleTextSizeChange("bio", value as Typography["size"])
+                  }>
+                  <SelectTrigger className="h-9 w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="base">Default</SelectItem>
+                    <SelectItem value="sm">Small</SelectItem>
+                    <SelectItem value="lg">Large</SelectItem>
+                    <SelectItem value="xl">XL</SelectItem>
+                    <SelectItem value="2xl">2XL</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>

@@ -103,8 +103,8 @@ export default function ProfilePreview({
                     color: theme.text.bio.color,
                   }}
                   className={cn(
-                    theme.text.bio.size,
-                    `text-${"opacity-90 max-w-sm mx-auto leading-relaxed px-2"}`
+                    `text-${theme.text.bio.size}`,
+                    "opacity-90 max-w-sm mx-auto leading-relaxed px-2"
                   )}>
                   {profile.bio}
                 </p>
