@@ -5,14 +5,16 @@ import {
   serial,
   text,
   timestamp,
-  json,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { ThemeConfig } from "@/lib/types";
 
 // Users table
 export const users = pgTable("user", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
   image: text("image"),
@@ -83,6 +85,13 @@ export const links = pgTable("link", {
   password: text("password"),
   description: text("description"),
   tags: text("tags").array(),
+  // Profile display configuration
+  displayStyle: text("display_style")
+    .$type<"default" | "social">()
+    .default("default")
+    .notNull(),
+  profileOrder: integer("profile_order").notNull(),
+  isVisibleOnProfile: boolean("is_visible_on_profile").default(true).notNull(),
   createdAt: timestamp("created_at", { mode: "date", precision: 3 })
     .defaultNow()
     .notNull(),
@@ -108,92 +117,33 @@ export const clickEvents = pgTable("click_event", {
     .references(() => links.id, { onDelete: "cascade" }),
 });
 
-// User customizations table
-export const userCustomizations = pgTable("user_customization", {
+// Profile customization table for public-facing page styling
+export const profileCustomizations = pgTable("profile_customization", {
   id: serial("id").primaryKey(),
   userId: integer("user_id")
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" })
-    .unique(),
-
-  // Profile settings
-  customProfileImage: text("custom_profile_image"),
-  showProfilePicture: boolean("show_profile_picture").default(true).notNull(),
-  showProfileName: boolean("show_profile_name").default(true).notNull(),
-
-  // Color customization
-  textColor: text("text_color").default("#000000"),
-  secondaryTextColor: text("secondary_text_color").default("#666666"),
-
-  // Background customization
-  backgroundType: text("background_type")
-    .$type<"color" | "gradient" | "image">()
-    .default("color")
-    .notNull(),
-  backgroundColor: text("background_color").default("#ffffff"), // Hex color
-  backgroundGradient: json("background_gradient").$type<{
-    from: string;
-    to: string;
-    direction?:
-      | "to-r"
-      | "to-l"
-      | "to-t"
-      | "to-b"
-      | "to-br"
-      | "to-bl"
-      | "to-tr"
-      | "to-tl";
-  }>(),
-  backgroundImage: text("background_image"),
-  buttonStyle: json("button_style")
-    .$type<{
-      shape: "rounded" | "square" | "pill";
-      variant: "default" | "outline" | "ghost" | "destructive" | "secondary";
-      size: "sm" | "default" | "lg";
-      backgroundColor: string;
-      textColor: string;
-      borderColor?: string;
-      hoverBackgroundColor?: string;
-      hoverTextColor?: string;
-    }>()
-    .default({
-      shape: "rounded",
-      variant: "default",
-      size: "default",
-      backgroundColor: "#000000",
-      textColor: "#ffffff",
-      borderColor: "#000000",
-      hoverBackgroundColor: "#333333",
-      hoverTextColor: "#ffffff",
-    }),
-
-  // Link ordering and visibility
-  linkOrder: json("link_order").$type<number[]>().default([]),
-  maxLinksToShow: integer("max_links_to_show").default(10),
-
-  theme: text("theme")
-    .$type<"light" | "dark" | "auto">()
-    .default("light")
-    .notNull(),
-  layout: text("layout")
-    .$type<"centered" | "left" | "right">()
-    .default("centered")
-    .notNull(),
-
-  customCss: text("custom_css"),
-  socialLinks: json("social_links").$type<{
-    twitter?: string;
-    instagram?: string;
-    linkedin?: string;
-    github?: string;
-    website?: string;
-  }>(),
-
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
   bio: text("bio"),
-
+  isPublic: boolean("is_public").default(true).notNull(),
+  // Store theme configuration as JSONB for flexibility
+  themeConfig: jsonb("theme_config").$type<ThemeConfig>(),
+  // Layout configuration
+  showSocialLinksSection: boolean("show_social_links_section")
+    .default(true)
+    .notNull(),
+  socialLinksPosition: text("social_links_position")
+    .$type<"top" | "bottom" | "side">()
+    .default("bottom")
+    .notNull(),
+  maxLinksPerRow: integer("max_links_per_row").default(1).notNull(), // For default button layout
+  maxSocialLinksPerRow: integer("max_social_links_per_row")
+    .default(6)
+    .notNull(), // For social buttons
+  // SEO metadata
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),
-
+  metaKeywords: text("meta_keywords").array(),
   createdAt: timestamp("created_at", { mode: "date", precision: 3 })
     .defaultNow()
     .notNull(),
@@ -202,14 +152,48 @@ export const userCustomizations = pgTable("user_customization", {
     .notNull(),
 });
 
+// Profile views table for analytics
+export const profileViews = pgTable("profile_view", {
+  id: serial("id").primaryKey(),
+  profileCustomizationId: integer("profile_customization_id")
+    .notNull()
+    .references(() => profileCustomizations.id, { onDelete: "cascade" }),
+  viewedAt: timestamp("viewed_at", { mode: "date", precision: 3 })
+    .defaultNow()
+    .notNull(),
+  referrer: text("referrer"),
+  ip: text("ip"),
+  userAgent: text("user_agent"),
+  country: text("country"),
+  city: text("city"),
+});
+
 // Define relationships
-export const usersRelations = relations(users, ({ many, one }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
   links: many(links),
-  customization: one(userCustomizations, {
+  profileCustomization: one(profileCustomizations, {
     fields: [users.id],
-    references: [userCustomizations.userId],
+    references: [profileCustomizations.userId],
+  }),
+}));
+
+export const profileCustomizationsRelations = relations(
+  profileCustomizations,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [profileCustomizations.userId],
+      references: [users.id],
+    }),
+    views: many(profileViews),
+  })
+);
+
+export const profileViewsRelations = relations(profileViews, ({ one }) => ({
+  profileCustomization: one(profileCustomizations, {
+    fields: [profileViews.profileCustomizationId],
+    references: [profileCustomizations.id],
   }),
 }));
 
@@ -228,43 +212,9 @@ export const clickEventsRelations = relations(clickEvents, ({ one }) => ({
   }),
 }));
 
-export const userCustomizationsRelations = relations(
-  userCustomizations,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [userCustomizations.userId],
-      references: [users.id],
-    }),
-  })
-);
-
 // Type inference
 export type User = typeof users.$inferSelect;
 export type Link = typeof links.$inferSelect;
 export type ClickEvent = typeof clickEvents.$inferSelect;
-export type UserCustomization = typeof userCustomizations.$inferSelect;
-export type UserCustomizationInsert = typeof userCustomizations.$inferInsert;
-
-// Default customization settings
-export const DEFAULT_CUSTOMIZATION: Partial<UserCustomizationInsert> = {
-  showProfilePicture: true,
-  showProfileName: true,
-  textColor: "#000000",
-  secondaryTextColor: "#666666",
-  backgroundType: "color",
-  backgroundColor: "#ffffff",
-  buttonStyle: {
-    shape: "rounded",
-    variant: "default",
-    size: "default",
-    backgroundColor: "#000000",
-    textColor: "#ffffff",
-    borderColor: "#000000",
-    hoverBackgroundColor: "#333333",
-    hoverTextColor: "#ffffff",
-  },
-  linkOrder: [],
-  maxLinksToShow: 10,
-  theme: "light",
-  layout: "centered",
-};
+export type ProfileCustomization = typeof profileCustomizations.$inferSelect;
+export type ProfileView = typeof profileViews.$inferSelect;
