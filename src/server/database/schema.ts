@@ -13,7 +13,7 @@ import { ThemeConfig } from "@/lib/types";
 // Users table
 export const users = pgTable("user", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name"),
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
@@ -85,7 +85,6 @@ export const links = pgTable("link", {
   password: text("password"),
   description: text("description"),
   tags: text("tags").array(),
-  // Profile display configuration
   displayStyle: text("display_style")
     .$type<"default" | "social">()
     .default("default")
