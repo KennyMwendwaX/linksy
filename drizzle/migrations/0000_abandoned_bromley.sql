@@ -88,8 +88,9 @@ CREATE TABLE "session" (
 --> statement-breakpoint
 CREATE TABLE "user" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"name" text,
+	"name" text NOT NULL,
 	"username" text NOT NULL,
+	"display_username" text,
 	"email" text NOT NULL,
 	"email_verified" boolean NOT NULL,
 	"image" text,

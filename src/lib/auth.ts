@@ -2,6 +2,7 @@ import db from "@/server/database";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { username } from "better-auth/plugins/username";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -16,7 +17,7 @@ export const auth = betterAuth({
       generateId: false,
     },
   },
-  plugins: [nextCookies()],
+  plugins: [username(), nextCookies()],
 });
 
 export type Session = typeof auth.$Infer.Session;

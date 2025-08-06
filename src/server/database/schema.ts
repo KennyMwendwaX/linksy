@@ -13,8 +13,9 @@ import { ThemeConfig } from "@/lib/types";
 // Users table
 export const users = pgTable("user", {
   id: serial("id").primaryKey(),
-  name: text("name"),
+  name: text("name").notNull(),
   username: text("username").notNull().unique(),
+  displayUsername: text("display_username"),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
   image: text("image"),
