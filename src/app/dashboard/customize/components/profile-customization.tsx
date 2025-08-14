@@ -10,11 +10,12 @@ import AppearanceTab from "./appearance-tab";
 import ProfileTab from "./profile-tab";
 import LinksTab from "./links-tab";
 import { useSession } from "@/lib/auth-client";
-import { ProfileCustomization } from "@/server/database/schema";
+import { Link, ProfileCustomization } from "@/server/database/schema";
 import SeoTab from "./seo-tab";
 
 type Props = {
   customization: ProfileCustomization | undefined;
+  links: Link[];
 };
 
 const defaultTheme: ThemeConfig = {
