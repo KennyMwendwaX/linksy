@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Palette, Link2 } from "lucide-react";
+import { User, Palette, Link2, Tags } from "lucide-react";
 import { LinkItem, ProfileData, ThemeConfig } from "@/lib/types";
 import ProfilePreview from "./profile-preview";
 import AppearanceTab from "./appearance-tab";
@@ -11,6 +11,7 @@ import ProfileTab from "./profile-tab";
 import LinksTab from "./links-tab";
 import { useSession } from "@/lib/auth-client";
 import { ProfileCustomization } from "@/server/database/schema";
+import SeoTab from "./seo-tab";
 
 type Props = {
   customization: ProfileCustomization | undefined;
@@ -186,7 +187,7 @@ export default function ProfileCustomizationPage({ customization }: Props) {
             </div>
 
             <Tabs defaultValue="appearance" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="appearance" className="gap-2">
                   <Palette className="w-4 h-4" />
                   Appearance
@@ -198,6 +199,10 @@ export default function ProfileCustomizationPage({ customization }: Props) {
                 <TabsTrigger value="links" className="gap-2">
                   <Link2 className="w-4 h-4" />
                   Links
+                </TabsTrigger>
+                <TabsTrigger value="seo" className="gap-2">
+                  <Tags className="w-4 h-4" />
+                  SEO
                 </TabsTrigger>
               </TabsList>
 
@@ -211,6 +216,10 @@ export default function ProfileCustomizationPage({ customization }: Props) {
 
               <TabsContent value="links" className="space-y-6">
                 <LinksTab links={links} setLinks={setLinks} />
+              </TabsContent>
+
+              <TabsContent value="seo" className="space-y-6">
+                <SeoTab />
               </TabsContent>
             </Tabs>
 

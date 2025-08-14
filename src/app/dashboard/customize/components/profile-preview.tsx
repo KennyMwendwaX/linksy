@@ -92,7 +92,7 @@ export default function ProfilePreview({
             }}>
             {/* Profile Header */}
             <div className="text-center space-y-4">
-              <Avatar className="w-20 h-20">
+              <Avatar className="w-18 h-18 mx-auto">
                 <AvatarImage
                   src={profile.image || undefined}
                   alt={profile.name}
