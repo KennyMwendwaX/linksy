@@ -30,10 +30,12 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconComponent } from "@/lib/icon-mapper";
 import { LinkItem } from "@/lib/types";
+import { ProfileCustomization } from "@/server/database/schema";
 
 type LinkTabProps = {
   links: LinkItem[];
   setLinks: React.Dispatch<React.SetStateAction<LinkItem[]>>;
+  customization: ProfileCustomization | undefined;
 };
 
 const SortableLinkItem = ({

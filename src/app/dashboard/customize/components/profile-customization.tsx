@@ -215,7 +215,11 @@ export default function ProfileCustomizationPage({ customization }: Props) {
               </TabsContent>
 
               <TabsContent value="links" className="space-y-6">
-                <LinksTab links={links} setLinks={setLinks} />
+                <LinksTab
+                  links={links}
+                  setLinks={setLinks}
+                  customization={customization}
+                />
               </TabsContent>
 
               <TabsContent value="seo" className="space-y-6">
