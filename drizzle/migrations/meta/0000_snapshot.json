@@ -1,5 +1,5 @@
 {
-  "id": "fae12f2d-bbe2-44f4-ad7f-f34ba35c22a1",
+  "id": "63c721f3-0016-4c85-8c73-c610699df64f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -362,13 +362,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
-        },
-        "social_links_position": {
-          "name": "social_links_position",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'bottom'"
         },
         "max_links_per_row": {
           "name": "max_links_per_row",

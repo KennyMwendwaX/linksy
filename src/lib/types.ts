@@ -46,8 +46,8 @@ export interface ThemeConfig {
 export interface ProfileData {
   name: string;
   username: string;
+  image: string | null;
   bio: string;
-  avatar: string;
 }
 
 export interface LinkItem {

@@ -52,7 +52,6 @@ CREATE TABLE "profile_customization" (
 	"is_public" boolean DEFAULT true NOT NULL,
 	"theme_config" jsonb,
 	"show_social_links_section" boolean DEFAULT true NOT NULL,
-	"social_links_position" text DEFAULT 'bottom' NOT NULL,
 	"max_links_per_row" integer DEFAULT 1 NOT NULL,
 	"max_social_links_per_row" integer DEFAULT 6 NOT NULL,
 	"meta_title" text,

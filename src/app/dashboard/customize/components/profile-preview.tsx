@@ -4,6 +4,8 @@ import { ThemeConfig, ProfileData, LinkItem } from "@/lib/types";
 import { cn, getShapeClasses } from "@/lib/utils";
 import { IconComponent } from "@/lib/icon-mapper";
 import { useMemo } from "react";
+import { useSession } from "@/lib/auth-client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type ProfilePreviewProps = {
   theme: ThemeConfig;
@@ -16,6 +18,17 @@ export default function ProfilePreview({
   profile,
   links,
 }: ProfilePreviewProps) {
+  const session = useSession();
+  const userInfo = session?.data?.user
+    ? {
+        name: session.data.user.name || "User",
+        username: session.data.user.username || "username",
+      }
+    : {
+        name: "Guest User",
+        username: "guest_user",
+      };
+
   const backgroundStyle = useMemo(() => {
     if (theme.background.gradient?.enabled) {
       const { type, direction, colors } = theme.background.gradient;
@@ -57,6 +70,14 @@ export default function ProfilePreview({
 
   const buttonShapeClasses = getShapeClasses(theme.button.shape);
 
+  const getInitials = (name: string) => {
+    const words = name.trim().split(" ");
+    if (words.length === 1) return words[0][0]?.toUpperCase();
+    return (
+      (words[0][0] || "") + (words[words.length - 1][0] || "")
+    ).toUpperCase();
+  };
+
   return (
     <div className="lg:sticky lg:top-6 lg:self-start lg:max-h-screen lg:overflow-y-auto">
       <Card>
@@ -71,9 +92,15 @@ export default function ProfilePreview({
             }}>
             {/* Profile Header */}
             <div className="text-center space-y-4">
-              <div className="relative">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 mx-auto shadow-lg" />
-              </div>
+              <Avatar className="w-20 h-20">
+                <AvatarImage
+                  src={profile.image || undefined}
+                  alt={profile.name}
+                />
+                <AvatarFallback className="text-lg font-medium">
+                  {getInitials(profile.name)}
+                </AvatarFallback>
+              </Avatar>
 
               <div className="space-y-2">
                 <div>
@@ -85,7 +112,7 @@ export default function ProfilePreview({
                       `text-${theme.text.name.size}`,
                       "font-bold tracking-tight"
                     )}>
-                    {profile.name}
+                    {userInfo.name}
                   </h3>
                   <p
                     style={{
@@ -95,7 +122,7 @@ export default function ProfilePreview({
                       `text-${theme.text.username.size}`,
                       "opacity-75 font-medium"
                     )}>
-                    @{profile.username}
+                    @{userInfo.username}
                   </p>
                 </div>
                 <p

@@ -27,8 +27,8 @@ export function NavUser() {
   const { data: sessionInfo } = useSession();
   const router = useRouter();
   const { isMobile } = useSidebar();
-  const userName = sessionInfo?.user?.name ?? "Guest";
-  const userEmail = sessionInfo?.user?.email ?? "No email provided";
+  const name = sessionInfo?.user?.name ?? "Guest";
+  const username = sessionInfo?.user?.username ?? "@guest";
   const userImage = sessionInfo?.user?.image;
 
   return (
@@ -42,12 +42,12 @@ export function NavUser() {
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={userImage || ""} alt="profile-image" />
                 <AvatarFallback className="rounded-lg">
-                  {userName[0]}
+                  {name[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{userName}</span>
-                <span className="truncate text-xs">{userEmail}</span>
+                <span className="truncate font-semibold">{name}</span>
+                <span className="truncate text-xs">@{username}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -62,12 +62,12 @@ export function NavUser() {
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={userImage || ""} alt="profile-image" />
                   <AvatarFallback className="rounded-lg">
-                    {userName[0]}
+                    {name[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{userName}</span>
-                  <span className="truncate text-xs">{userEmail}</span>
+                  <span className="truncate font-semibold">{name}</span>
+                  <span className="truncate text-xs">@{username}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

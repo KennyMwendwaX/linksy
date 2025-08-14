@@ -132,10 +132,6 @@ export const profileCustomizations = pgTable("profile_customization", {
   showSocialLinksSection: boolean("show_social_links_section")
     .default(true)
     .notNull(),
-  socialLinksPosition: text("social_links_position")
-    .$type<"top" | "bottom" | "side">()
-    .default("bottom")
-    .notNull(),
   maxLinksPerRow: integer("max_links_per_row").default(1).notNull(), // For default button layout
   maxSocialLinksPerRow: integer("max_social_links_per_row")
     .default(6)

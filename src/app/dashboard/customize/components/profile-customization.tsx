@@ -9,6 +9,12 @@ import ProfilePreview from "./profile-preview";
 import AppearanceTab from "./appearance-tab";
 import ProfileTab from "./profile-tab";
 import LinksTab from "./links-tab";
+import { useSession } from "@/lib/auth-client";
+import { ProfileCustomization } from "@/server/database/schema";
+
+type Props = {
+  customization: ProfileCustomization | undefined;
+};
 
 const defaultTheme: ThemeConfig = {
   background: {
@@ -45,13 +51,6 @@ const defaultTheme: ThemeConfig = {
       size: "sm",
     },
   },
-};
-
-const defaultProfile: ProfileData = {
-  name: "John Doe",
-  username: "johndoe",
-  bio: "Full-stack developer | Coffee enthusiast | Building cool things",
-  avatar: "",
 };
 
 const defaultLinks: LinkItem[] = [
@@ -120,9 +119,23 @@ const defaultLinks: LinkItem[] = [
   },
 ];
 
-export default function ProfileCustomization() {
-  const [theme, setTheme] = useState<ThemeConfig>(defaultTheme);
-  const [profile, setProfile] = useState<ProfileData>(defaultProfile);
+export default function ProfileCustomizationPage({ customization }: Props) {
+  const session = useSession();
+  const user = session?.data?.user;
+
+  // Use defaultTheme when customization.themeConfig is null or undefined
+  const [theme, setTheme] = useState<ThemeConfig>(
+    customization?.themeConfig ?? defaultTheme
+  );
+
+  // Initialize profile with user info and bio from customization
+  const [profile, setProfile] = useState<ProfileData>({
+    name: user?.name ?? "Guest User",
+    username: user?.username ?? "guest_user",
+    image: user?.image ?? "",
+    bio: customization?.bio || "",
+  });
+
   const [links, setLinks] = useState<LinkItem[]>(defaultLinks);
 
   const stableSetTheme = useCallback(
@@ -139,10 +152,22 @@ export default function ProfileCustomization() {
   }, [theme, profile, links]);
 
   const handleReset = useCallback(() => {
-    setTheme(defaultTheme);
-    setProfile(defaultProfile);
+    // Reset to original customization theme or default theme
+    setTheme(customization?.themeConfig ?? defaultTheme);
+    setProfile({
+      name: user?.name ?? "Guest User",
+      username: user?.username ?? "guest_user",
+      image: user?.image ?? null,
+      bio: customization?.bio || "",
+    });
     setLinks(defaultLinks);
-  }, []);
+  }, [
+    customization?.themeConfig,
+    customization?.bio,
+    user?.name,
+    user?.username,
+    user?.image,
+  ]);
 
   return (
     <div className="min-h-screen bg-background">
