@@ -234,7 +234,6 @@ export function LinkFormDialog({ trigger }: LinkFormDialogProps) {
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={form.control}
                     name="customSlug"
@@ -245,13 +244,13 @@ export function LinkFormDialog({ trigger }: LinkFormDialogProps) {
                           Custom Slug
                         </FormLabel>
                         <FormControl>
-                          <div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring">
-                            <div className="px-3 py-2.5 bg-muted text-muted-foreground text-sm border-r font-mono">
+                          <div className="flex items-center max-w-md">
+                            <span className="inline-flex items-center px-3 h-10 rounded-l-md border border-r-0 border-input bg-muted text-sm text-muted-foreground">
                               short.ly/
-                            </div>
+                            </span>
                             <Input
                               placeholder="my-custom-link"
-                              className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-10"
+                              className="rounded-l-none border-0 focus-visible:ring-2 focus-visible:ring-ring h-10"
                               {...field}
                             />
                           </div>
