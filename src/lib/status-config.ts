@@ -1,4 +1,4 @@
-import { CheckCircle, PauseCircle, Clock, Archive } from "lucide-react";
+import { CheckCircle, PauseCircle, Clock } from "lucide-react";
 import type { ComponentType } from "react";
 import { linkSchema } from "./link-schema";
 import { z } from "zod";
@@ -22,10 +22,5 @@ export const statuses: {
     label: "Expired",
     value: "expired",
     icon: Clock,
-  },
-  {
-    label: "Archived",
-    value: "archived",
-    icon: Archive,
   },
 ];

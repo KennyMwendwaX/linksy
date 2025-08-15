@@ -63,7 +63,7 @@ import {
   Hash,
   FileText,
   LoaderCircle,
-  Sparkles,
+  Save,
 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -596,7 +596,7 @@ export function LinkFormDialog({ trigger }: LinkFormDialogProps) {
                           </>
                         ) : (
                           <>
-                            <Sparkles className="h-4 w-4" />
+                            <Save className="h-4 w-4" />
                             Create Link
                           </>
                         )}

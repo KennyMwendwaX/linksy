@@ -25,7 +25,7 @@ const defaultTheme: ThemeConfig = {
       enabled: false,
       type: "linear",
       direction: "to right",
-      colors: ["#3b82f6", "#8b5cf6"],
+      colors: ["#72CE6D", "#2A6FEE"],
     },
   },
   button: {

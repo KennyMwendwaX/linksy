@@ -77,9 +77,7 @@ export const links = pgTable("link", {
   originalUrl: text("original_url").notNull(),
   slug: text("slug").notNull().unique(),
   clicks: integer("clicks").default(0).notNull(),
-  status: text("status")
-    .$type<"active" | "inactive" | "expired" | "archived">()
-    .notNull(),
+  status: text("status").$type<"active" | "inactive" | "expired">().notNull(),
   expirationDate: timestamp("expiration_date"),
   lastAccessedAt: timestamp("last_accessed_at"),
   isProtected: boolean("is_protected").default(false).notNull(),
@@ -90,7 +88,7 @@ export const links = pgTable("link", {
     .$type<"default" | "social">()
     .default("default")
     .notNull(),
-  profileOrder: integer("profile_order").notNull(),
+  profileOrder: text("profile_order").notNull(),
   isVisibleOnProfile: boolean("is_visible_on_profile").default(true).notNull(),
   createdAt: timestamp("created_at", { mode: "date", precision: 3 })
     .defaultNow()
