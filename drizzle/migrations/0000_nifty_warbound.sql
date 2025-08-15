@@ -37,7 +37,7 @@ CREATE TABLE "link" (
 	"description" text,
 	"tags" text[],
 	"display_style" text DEFAULT 'default' NOT NULL,
-	"profile_order" integer NOT NULL,
+	"profile_order" text NOT NULL,
 	"is_visible_on_profile" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
 	"updated_at" timestamp (3) NOT NULL,

@@ -1,5 +1,5 @@
 {
-  "id": "63c721f3-0016-4c85-8c73-c610699df64f",
+  "id": "d9ccbff7-7caa-4a6b-9a96-45aa96948fe9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -260,7 +260,7 @@
         },
         "profile_order": {
           "name": "profile_order",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
