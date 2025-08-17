@@ -59,3 +59,30 @@ export const getUserLink = async (linkId: string) => {
     throw new Error("Failed to fetch link");
   }
 };
+
+export const getActiveUserLinks = async () => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      throw new Error("No active session found");
+    }
+
+    const userId = session.user.id;
+
+    const activeUserLinks = await db.query.links.findMany({
+      where: and(
+        eq(links.userId, parseInt(userId)),
+        eq(links.status, "active")
+      ),
+      orderBy: [desc(links.createdAt)],
+    });
+
+    return activeUserLinks;
+  } catch (error) {
+    console.error("Error fetching active user links:", error);
+    throw new Error("Failed to fetch active user links");
+  }
+};
