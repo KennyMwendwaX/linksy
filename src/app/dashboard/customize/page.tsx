@@ -1,13 +1,15 @@
 import { getProfileCustomization } from "@/server/actions/customizations/get";
 import ProfileCustomization from "./components/profile-customization";
 import { tryCatch } from "@/lib/try-catch";
-import { getUserLinks } from "@/server/actions/links/get";
+import { getActiveUserLinks } from "@/server/actions/links/get";
 
 export default async function Customize() {
   const { data: profileCustomization, error: profileCustomizationError } =
     await tryCatch(getProfileCustomization());
 
-  const { data: links, error: linksError } = await tryCatch(getUserLinks());
+  const { data: links, error: linksError } = await tryCatch(
+    getActiveUserLinks()
+  );
 
   if (profileCustomizationError) {
     return <div>Error loading profile customization</div>;
