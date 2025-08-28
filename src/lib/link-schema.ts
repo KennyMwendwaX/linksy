@@ -7,7 +7,7 @@ export const linkSchema = z.object({
   shortUrl: z.string().url(),
   createdAt: z.date(),
   clicks: z.number().int().nonnegative(),
-  status: z.enum(["active", "inactive", "expired", "archived"]),
+  status: z.enum(["active", "inactive", "expired"]),
   expirationDate: z.date().optional(),
   lastAccessedAt: z.date().optional(),
   isProtected: z.boolean().default(false),
@@ -33,7 +33,7 @@ export const linkFormSchema = z
       .string()
       .max(500, "Description must be less than 500 characters")
       .optional(),
-    status: z.enum(["active", "inactive", "expired", "archived"]),
+    status: z.enum(["active", "inactive", "expired"]),
     expirationDate: z.date().optional(),
     isProtected: z.boolean(),
     password: z.string().optional(),

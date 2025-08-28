@@ -5,8 +5,9 @@ import { LinkFormData } from "@/lib/link-schema";
 import { headers } from "next/headers";
 import { nanoid } from "nanoid";
 import db from "@/server/database";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { links } from "@/server/database/schema";
+import { fractionalOrder } from "@/lib/fractional-order";
 
 export const createLink = async (linkFormData: LinkFormData) => {
   try {
@@ -17,6 +18,14 @@ export const createLink = async (linkFormData: LinkFormData) => {
     if (!session) {
       throw new Error("No active session found");
     }
+
+    // Get the last link to determine new order position
+    const lastLink = await db.query.links.findFirst({
+      where: eq(links.userId, parseInt(session.user.id)),
+      orderBy: desc(links.profileOrder),
+    });
+
+    const newOrder = fractionalOrder(lastLink?.profileOrder, undefined);
 
     const slug = linkFormData.customSlug || nanoid(8);
 
@@ -36,6 +45,7 @@ export const createLink = async (linkFormData: LinkFormData) => {
         slug: slug,
         description: linkFormData.description || null,
         status: linkFormData.status,
+        profileOrder: newOrder,
         expirationDate: linkFormData.expirationDate
           ? new Date(linkFormData.expirationDate)
           : null,
