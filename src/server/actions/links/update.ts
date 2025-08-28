@@ -74,3 +74,46 @@ export const updateLink = async (
     throw new Error("Failed to update link");
   }
 };
+
+export async function toggleLinkVisibility(linkId: number, isVisible: boolean) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      throw new Error("No active session found");
+    }
+
+    const userId = parseInt(session.user.id, 10);
+
+    const existingLink = await db.query.links.findFirst({
+      where: eq(links.id, linkId),
+    });
+
+    if (!existingLink) {
+      throw new Error("Link not found");
+    }
+
+    if (existingLink.userId !== userId) {
+      throw new Error("You do not have permission to update this link");
+    }
+
+    const [updatedLink] = await db
+      .update(links)
+      .set({
+        isVisibleOnProfile: isVisible,
+      })
+      .where(eq(links.id, linkId))
+      .returning();
+
+    if (!updatedLink) {
+      throw new Error("Failed to update link");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating link visibility:", error);
+    throw new Error("Failed to update link visibility");
+  }
+}
