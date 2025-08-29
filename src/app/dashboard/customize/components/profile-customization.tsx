@@ -155,7 +155,7 @@ export default function ProfileCustomizationPage({
 
               <TabsContent value="links" className="space-y-6">
                 <LinksTab
-                  links={activeLinks}
+                  links={links}
                   setLinks={setLinks}
                   customization={customization}
                 />
@@ -176,7 +176,7 @@ export default function ProfileCustomizationPage({
             </div>
           </div>
 
-          <ProfilePreview theme={theme} profile={profile} links={activeLinks} />
+          <ProfilePreview theme={theme} profile={profile} links={links} />
         </div>
       </div>
     </div>

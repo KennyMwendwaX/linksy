@@ -61,12 +61,12 @@ export default function ProfilePreview({
     return { backgroundColor: theme.background.color };
   }, [theme]);
 
-  const activeLinks = links.filter((link) => link.status === "active");
-  const socialLinks = activeLinks.filter(
-    (link) => link.displayType === "social"
+  const visibleLinks = links.filter((link) => link.isVisibleOnProfile === true);
+  const socialLinks = visibleLinks.filter(
+    (link) => link.displayStyle === "social"
   );
-  const buttonLinks = activeLinks.filter(
-    (link) => link.displayType === "button"
+  const buttonLinks = visibleLinks.filter(
+    (link) => link.displayStyle === "default"
   );
 
   const buttonShapeClasses = getShapeClasses(theme.button.shape);

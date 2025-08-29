@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -9,8 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { GripVertical, Plus, Trash2, Link2, Users } from "lucide-react";
-import { useCallback } from "react";
+import { GripVertical, Link2, Users } from "lucide-react";
+import { useCallback, useTransition } from "react";
 import {
   DndContext,
   closestCenter,
@@ -30,6 +29,9 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconComponent } from "@/lib/icon-mapper";
 import { Link, ProfileCustomization } from "@/server/database/schema";
+import { reorderLink } from "@/server/actions/links/reorder";
+import { tryCatch } from "@/lib/try-catch";
+import { toast } from "sonner";
 
 type LinkTabProps = {
   links: Link[];
@@ -40,7 +42,6 @@ type LinkTabProps = {
 const SortableLinkItem = ({
   link,
   onUpdate,
-  onDelete,
 }: {
   link: Link;
   onUpdate: (id: string, updates: Partial<Link>) => void;
@@ -102,15 +103,15 @@ const SortableLinkItem = ({
         />
 
         <Select
-          value={link.displayType}
-          onValueChange={(value: "button" | "social") =>
-            onUpdate(link.id.toString(), { displayType: value })
+          value={link.displayStyle}
+          onValueChange={(value: "default" | "social") =>
+            onUpdate(link.id.toString(), { displayStyle: value })
           }>
           <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="button">
+            <SelectItem value="default">
               <div className="flex items-center gap-1">
                 <Link2 className="w-3 h-3" />
                 <span className="text-xs">Button</span>
@@ -129,27 +130,21 @@ const SortableLinkItem = ({
       {/* Actions */}
       <div className="flex-shrink-0 flex flex-col items-center gap-2">
         <Switch
-          disabled={link.status !== "active"}
-          checked={link.status === "active"}
+          checked={link.isVisibleOnProfile === true}
           onCheckedChange={(checked) =>
             onUpdate(link.id.toString(), {
-              status: checked ? "active" : "inactive",
+              isVisibleOnProfile: checked ? true : false,
             })
           }
         />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onDelete(link.id.toString())}
-          className="text-destructive hover:text-destructive h-8 w-8 p-0">
-          <Trash2 className="w-4 h-4" />
-        </Button>
       </div>
     </div>
   );
 };
 
 export default function LinksTab({ links, setLinks }: LinkTabProps) {
+  const [, startTransition] = useTransition();
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -175,67 +170,59 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
     [setLinks]
   );
 
-  const handleAddLink = useCallback(() => {
-    const newLink: Link = {
-      id: Date.now(),
-      name: "New Link",
-      originalUrl: "https://example.com",
-      slug: `link-${Date.now()}`,
-      status: "active",
-      order: links.length + 1,
-      displayType: "button",
-    };
-    setLinks((prev) => [...prev, newLink]);
-  }, [links.length, setLinks]);
-
   const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
+    async (event: DragEndEvent) => {
       const { active, over } = event;
 
       if (over && active.id !== over.id) {
-        setLinks((prev) => {
-          const oldIndex = prev.findIndex((link) => link.id === active.id);
-          const newIndex = prev.findIndex((link) => link.id === over.id);
+        // Get current order
+        const oldIndex = links.findIndex((link) => link.id === active.id);
+        const newIndex = links.findIndex((link) => link.id === over.id);
 
-          const newLinks = arrayMove(prev, oldIndex, newIndex);
+        // Optimistic update - immediate UI feedback
+        const newLinks = arrayMove(links, oldIndex, newIndex);
+        setLinks(newLinks);
 
-          return newLinks.map((link, index) => ({
-            ...link,
-            order: index + 1,
-          }));
+        startTransition(async () => {
+          try {
+            // Sync with server
+            const result = await tryCatch(
+              reorderLink(Number(active.id), newIndex)
+            );
+
+            if (!result.error) {
+              // Revert on failure
+              setLinks(links);
+              toast.error("Failed to reorder the link");
+              console.error("Failed to reorder:", result.error);
+            }
+          } catch (error) {
+            // Revert on error
+            setLinks(links);
+            console.error("Reorder error:", error);
+          }
         });
       }
     },
-    [setLinks]
+    [links, setLinks]
   );
 
-  const sortedLinks = [...links].sort((a, b) => a.order - b.order);
-  const buttonLinks = sortedLinks.filter(
-    (link) => link.displayType === "button"
-  );
-  const socialLinks = sortedLinks.filter(
-    (link) => link.displayType === "social"
-  );
+  const buttonLinks = links.filter((link) => link.displayStyle === "default");
+  const socialLinks = links.filter((link) => link.displayStyle === "social");
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <div className="space-y-1">
-            <div>Link Management</div>
-            <div className="text-sm font-normal text-muted-foreground">
-              {buttonLinks.length} button links • {socialLinks.length} social
-              links
-            </div>
+          <div>Link Management</div>
+          <div className="text-sm font-normal text-muted-foreground">
+            {buttonLinks.length} button links • {socialLinks.length} social
+            links
           </div>
-          <Button onClick={handleAddLink} size="sm" className="gap-2">
-            <Plus className="w-4 h-4" />
-            Add Link
-          </Button>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {sortedLinks.length === 0 ? (
+        {links.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Link2 className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>No links added yet</p>
@@ -247,10 +234,10 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}>
             <SortableContext
-              items={sortedLinks.map((link) => link.id)}
+              items={links.map((link) => link.id)}
               strategy={verticalListSortingStrategy}>
               <div className="space-y-3">
-                {sortedLinks.map((link) => (
+                {links.map((link) => (
                   <SortableLinkItem
                     key={link.id}
                     link={link}
