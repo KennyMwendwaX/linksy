@@ -184,22 +184,15 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
         setLinks(newLinks);
 
         startTransition(async () => {
-          try {
-            // Sync with server
-            const result = await tryCatch(
-              reorderLink(Number(active.id), newIndex)
-            );
+          const result = await tryCatch(
+            reorderLink(Number(active.id), newIndex)
+          );
 
-            if (!result.error) {
-              // Revert on failure
-              setLinks(links);
-              toast.error("Failed to reorder the link");
-              console.error("Failed to reorder:", result.error);
-            }
-          } catch (error) {
-            // Revert on error
+          if (result.error) {
+            // Revert on failure
             setLinks(links);
-            console.error("Reorder error:", error);
+            toast.error("Failed to reorder the link");
+            console.error("Failed to reorder:", result.error);
           }
         });
       }

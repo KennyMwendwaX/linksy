@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import db from "@/server/database";
-import { links } from "@/server/database/schema";
+import { links, users } from "@/server/database/schema";
 import { and, desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
@@ -84,5 +84,30 @@ export const getActiveUserLinks = async () => {
   } catch (error) {
     console.error("Error fetching active user links:", error);
     throw new Error("Failed to fetch active user links");
+  }
+};
+
+export const getUserVisibleLinks = async (username: string) => {
+  try {
+    const user = await db.query.users.findFirst({
+      where: eq(users.username, username),
+    });
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const visibleUserLinks = await db.query.links.findMany({
+      where: and(
+        eq(links.userId, user.id),
+        eq(links.status, "active"),
+        eq(links.isVisibleOnProfile, true)
+      ),
+      orderBy: [desc(links.createdAt)],
+    });
+
+    return visibleUserLinks;
+  } catch (error) {
+    console.error("Error fetching visible user links:", error);
+    throw new Error("Failed to fetch visible user links");
   }
 };
