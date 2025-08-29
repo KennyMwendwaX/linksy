@@ -5,6 +5,7 @@ import { LinkFormData } from "@/lib/link-schema";
 import db from "@/server/database";
 import { links } from "@/server/database/schema";
 import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export const updateLink = async (
@@ -110,6 +111,8 @@ export async function toggleLinkVisibility(linkId: number, isVisible: boolean) {
     if (!updatedLink) {
       throw new Error("Failed to update link");
     }
+
+    revalidatePath("/dashboard/customization");
 
     return { success: true };
   } catch (error) {

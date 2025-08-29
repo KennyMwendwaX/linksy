@@ -21,13 +21,13 @@ export async function reorderLink(linkId: number, newIndex: number) {
     });
 
     if (!session) {
-      return { success: false, error: "Unauthorized" };
+      throw new Error("No active session found");
     }
 
     // Validate input
     const validation = reorderLinkSchema.safeParse({ linkId, newIndex });
     if (!validation.success) {
-      return { success: false, error: "Invalid input parameters" };
+      throw new Error("Invalid input parameters");
     }
 
     const userId = parseInt(session.user.id);
@@ -39,7 +39,7 @@ export async function reorderLink(linkId: number, newIndex: number) {
 
     const linkToMove = userOrderedLinks.find((link) => link.id === linkId);
     if (!linkToMove) {
-      return { success: false, error: "Link not found" };
+      throw new Error("Link not found");
     }
 
     // Remove the link from the array
@@ -89,9 +89,6 @@ export async function reorderLink(linkId: number, newIndex: number) {
     return { success: true };
   } catch (error) {
     console.error("Reorder link error:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to reorder link",
-    };
+    return new Error("Failed to reorder link");
   }
 }
