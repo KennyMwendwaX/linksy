@@ -1,55 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ThemeConfig } from "@/lib/types";
 import { cn, getShapeClasses } from "@/lib/utils";
 import { IconComponent } from "@/lib/icon-mapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { tryCatch } from "@/lib/try-catch";
-import { getProfileCustomization } from "@/server/actions/customizations/get";
+import { getUserProfileCustomization } from "@/server/actions/customizations/get";
 import { getUserVisibleLinks } from "@/server/actions/links/get";
 import { getUserProfileInfo } from "@/server/actions/users/get";
+import { defaultTheme } from "@/lib/default-theme";
 
 type Props = {
   params: Promise<{
     username: string;
   }>;
-};
-
-const defaultTheme: ThemeConfig = {
-  background: {
-    color: "#0f0f23",
-    gradient: {
-      enabled: true,
-      type: "radial",
-      direction: "circle at center",
-      colors: ["#1e1b4b", "#312e81", "#1e293b", "#0f172a"],
-    },
-  },
-  button: {
-    backgroundColor: "#6366f1",
-    textColor: "#ffffff",
-    size: "default",
-    variant: "default",
-    shape: "default",
-  },
-  socialMedia: {
-    backgroundColor: "#8b5cf6",
-    iconColor: "#ffffff",
-  },
-  text: {
-    name: {
-      color: "#f8fafc",
-      size: "2xl",
-    },
-    username: {
-      color: "#a78bfa",
-      size: "base",
-    },
-    bio: {
-      color: "#cbd5e1",
-      size: "base",
-    },
-  },
 };
 
 export default async function PublicProfile({ params }: Props) {
@@ -70,7 +33,7 @@ export default async function PublicProfile({ params }: Props) {
   }
 
   const { data: profileCustomization, error: profileCustomizationError } =
-    await tryCatch(getProfileCustomization(cleanUsername));
+    await tryCatch(getUserProfileCustomization(cleanUsername));
   if (profileCustomizationError) {
     console.error(
       "Failed to fetch profile customization:",

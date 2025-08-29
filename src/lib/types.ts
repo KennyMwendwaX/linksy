@@ -43,10 +43,10 @@ export interface ThemeConfig {
   text: TextConfig;
 }
 
-export interface ProfileData {
+export interface ProfileInfo {
   name: string;
   username: string;
-  image: string | null;
+  image: string | null | undefined;
   bio: string;
 }
 

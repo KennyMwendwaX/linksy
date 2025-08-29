@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Palette, Link2, Tags } from "lucide-react";
-import { ProfileData, ThemeConfig } from "@/lib/types";
+import { ProfileInfo, ThemeConfig } from "@/lib/types";
 import ProfilePreview from "./profile-preview";
 import AppearanceTab from "./appearance-tab";
 import ProfileTab from "./profile-tab";
@@ -12,52 +12,22 @@ import LinksTab from "./links-tab";
 import { useSession } from "@/lib/auth-client";
 import { Link, ProfileCustomization } from "@/server/database/schema";
 import SeoTab from "./seo-tab";
+import { defaultTheme } from "@/lib/default-theme";
 
 type Props = {
   customization: ProfileCustomization | undefined;
-  activeLinks: Link[];
-};
-
-const defaultTheme: ThemeConfig = {
-  background: {
-    color: "#ffffff",
-    gradient: {
-      enabled: false,
-      type: "linear",
-      direction: "to right",
-      colors: ["#72CE6D", "#2A6FEE"],
-    },
-  },
-  button: {
-    backgroundColor: "#3b82f6",
-    textColor: "#ffffff",
-    size: "default",
-    shape: "default",
-    variant: "default",
-  },
-  socialMedia: {
-    backgroundColor: "#1DA1F2",
-    iconColor: "#ffffff",
-  },
-  text: {
-    name: {
-      color: "#1f2937",
-      size: "2xl",
-    },
-    username: {
-      color: "#1f2937",
-      size: "sm",
-    },
-    bio: {
-      color: "#1f2937",
-      size: "sm",
-    },
-  },
+  links: Link[];
+  sessionInfo: {
+    name: string;
+    username: string;
+    image: string | null | undefined;
+  };
 };
 
 export default function ProfileCustomizationPage({
   customization,
-  activeLinks,
+  links: activeLinks,
+  sessionInfo,
 }: Props) {
   const session = useSession();
   const user = session?.data?.user;
@@ -68,14 +38,12 @@ export default function ProfileCustomizationPage({
   );
 
   // Initialize profile with user info and bio from customization
-  const [profile, setProfile] = useState<ProfileData>({
-    name: user?.name ?? "Guest User",
-    username: user?.username ?? "guest_user",
-    image: user?.image ?? "",
+  const [profile, setProfile] = useState<ProfileInfo>({
+    ...sessionInfo,
     bio: customization?.bio || "",
   });
 
-  const [links, setLinks] = useState(activeLinks);
+  const [links, setLinks] = useState<Link[]>(activeLinks);
 
   const stableSetTheme = useCallback(
     (value: React.SetStateAction<ThemeConfig>) => {
