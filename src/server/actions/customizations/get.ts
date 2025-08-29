@@ -1,25 +1,21 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import db from "@/server/database";
-import { profileCustomizations } from "@/server/database/schema";
+import { profileCustomizations, users } from "@/server/database/schema";
 import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
 
-export const getProfileCustomization = async () => {
+export const getProfileCustomization = async (username: string) => {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
+    console.log("Fetching profile customization for username:", username);
+    const user = await db.query.users.findFirst({
+      where: eq(users.username, username),
     });
-
-    if (!session) {
-      throw new Error("No active session found");
+    if (!user) {
+      throw new Error("User not found");
     }
 
-    const userId = session.user.id;
-
     const userCustomization = await db.query.profileCustomizations.findFirst({
-      where: eq(profileCustomizations.userId, parseInt(userId)),
+      where: eq(profileCustomizations.userId, user.id),
     });
 
     return userCustomization;

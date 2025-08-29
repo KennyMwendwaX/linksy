@@ -54,15 +54,23 @@ const defaultTheme: ThemeConfig = {
 
 export default async function PublicProfile({ params }: Props) {
   const { username } = await params;
+  // Decode URL-encoded characters
+  let cleanUsername = decodeURIComponent(username);
+
+  // If it starts with @, strip it
+  if (cleanUsername.startsWith("@")) {
+    cleanUsername = cleanUsername.slice(1);
+  }
+
   const { data: profile, error: profileError } = await tryCatch(
-    getUserProfileInfo(username)
+    getUserProfileInfo(cleanUsername)
   );
   if (profileError) {
     console.error("Failed to fetch user info:", profileError);
   }
 
   const { data: profileCustomization, error: profileCustomizationError } =
-    await tryCatch(getProfileCustomization());
+    await tryCatch(getProfileCustomization(cleanUsername));
   if (profileCustomizationError) {
     console.error(
       "Failed to fetch profile customization:",
@@ -71,7 +79,7 @@ export default async function PublicProfile({ params }: Props) {
   }
 
   const { data: visibleLinks, error: linksError } = await tryCatch(
-    getUserVisibleLinks(username)
+    getUserVisibleLinks(cleanUsername)
   );
   if (linksError) {
     console.error("Failed to fetch user links:", linksError);
