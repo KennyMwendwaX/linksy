@@ -29,12 +29,11 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconComponent } from "@/lib/icon-mapper";
-import { LinkItem } from "@/lib/types";
-import { ProfileCustomization } from "@/server/database/schema";
+import { Link, ProfileCustomization } from "@/server/database/schema";
 
 type LinkTabProps = {
-  links: LinkItem[];
-  setLinks: React.Dispatch<React.SetStateAction<LinkItem[]>>;
+  links: Link[];
+  setLinks: React.Dispatch<React.SetStateAction<Link[]>>;
   customization: ProfileCustomization | undefined;
 };
 
@@ -43,8 +42,8 @@ const SortableLinkItem = ({
   onUpdate,
   onDelete,
 }: {
-  link: LinkItem;
-  onUpdate: (id: string, updates: Partial<LinkItem>) => void;
+  link: Link;
+  onUpdate: (id: string, updates: Partial<Link>) => void;
   onDelete: (id: string) => void;
 }) => {
   const {
@@ -159,7 +158,7 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
   );
 
   const handleLinkUpdate = useCallback(
-    (id: string, updates: Partial<LinkItem>) => {
+    (id: string, updates: Partial<Link>) => {
       setLinks((prev) =>
         prev.map((link) =>
           link.id.toString() === id ? { ...link, ...updates } : link
@@ -177,7 +176,7 @@ export default function LinksTab({ links, setLinks }: LinkTabProps) {
   );
 
   const handleAddLink = useCallback(() => {
-    const newLink: LinkItem = {
+    const newLink: Link = {
       id: Date.now(),
       name: "New Link",
       originalUrl: "https://example.com",

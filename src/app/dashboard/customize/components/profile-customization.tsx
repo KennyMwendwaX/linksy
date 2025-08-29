@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, Palette, Link2, Tags } from "lucide-react";
-import { LinkItem, ProfileData, ThemeConfig } from "@/lib/types";
+import { ProfileData, ThemeConfig } from "@/lib/types";
 import ProfilePreview from "./profile-preview";
 import AppearanceTab from "./appearance-tab";
 import ProfileTab from "./profile-tab";
@@ -15,7 +15,7 @@ import SeoTab from "./seo-tab";
 
 type Props = {
   customization: ProfileCustomization | undefined;
-  links: Link[];
+  activeLinks: Link[];
 };
 
 const defaultTheme: ThemeConfig = {
@@ -55,73 +55,10 @@ const defaultTheme: ThemeConfig = {
   },
 };
 
-const defaultLinks: LinkItem[] = [
-  {
-    id: 1,
-    name: "Google Search",
-    originalUrl: "https://www.google.com",
-    slug: "google",
-    status: "active",
-    order: 1,
-    displayType: "button", // Main link as button
-  },
-  {
-    id: 2,
-    name: "YouTube",
-    originalUrl: "https://www.youtube.com",
-    slug: "youtube",
-    status: "active",
-    order: 2,
-    displayType: "button", // Main link as button
-  },
-  {
-    id: 3,
-    name: "X Profile",
-    originalUrl: "https://x.com/yourprofile",
-    slug: "x",
-    status: "active",
-    order: 3,
-    displayType: "social", // Social media as social icon
-  },
-  {
-    id: 4,
-    name: "LinkedIn Profile",
-    originalUrl: "https://linkedin.com/in/yourprofile",
-    slug: "linkedin",
-    status: "active",
-    order: 4,
-    displayType: "social", // Social media as social icon
-  },
-  {
-    id: 5,
-    name: "Facebook Page",
-    originalUrl: "https://facebook.com/yourpage",
-    slug: "facebook",
-    status: "inactive",
-    order: 5,
-    displayType: "social", // Social media as social icon
-  },
-  {
-    id: 6,
-    name: "Instagram Profile",
-    originalUrl: "https://instagram.com/yourprofile",
-    slug: "instagram",
-    status: "active",
-    order: 6,
-    displayType: "social", // Social media as social icon
-  },
-  {
-    id: 7,
-    name: "Portfolio Website",
-    originalUrl: "https://yourname.dev",
-    slug: "portfolio",
-    status: "active",
-    order: 7,
-    displayType: "button", // Portfolio as button
-  },
-];
-
-export default function ProfileCustomizationPage({ customization }: Props) {
+export default function ProfileCustomizationPage({
+  customization,
+  activeLinks,
+}: Props) {
   const session = useSession();
   const user = session?.data?.user;
 
@@ -138,7 +75,7 @@ export default function ProfileCustomizationPage({ customization }: Props) {
     bio: customization?.bio || "",
   });
 
-  const [links, setLinks] = useState<LinkItem[]>(defaultLinks);
+  const [links, setLinks] = useState(activeLinks);
 
   const stableSetTheme = useCallback(
     (value: React.SetStateAction<ThemeConfig>) => {
@@ -162,8 +99,9 @@ export default function ProfileCustomizationPage({ customization }: Props) {
       image: user?.image ?? null,
       bio: customization?.bio || "",
     });
-    setLinks(defaultLinks);
+    setLinks(activeLinks);
   }, [
+    activeLinks,
     customization?.themeConfig,
     customization?.bio,
     user?.name,
@@ -217,7 +155,7 @@ export default function ProfileCustomizationPage({ customization }: Props) {
 
               <TabsContent value="links" className="space-y-6">
                 <LinksTab
-                  links={links}
+                  links={activeLinks}
                   setLinks={setLinks}
                   customization={customization}
                 />
@@ -238,7 +176,7 @@ export default function ProfileCustomizationPage({ customization }: Props) {
             </div>
           </div>
 
-          <ProfilePreview theme={theme} profile={profile} links={links} />
+          <ProfilePreview theme={theme} profile={profile} links={activeLinks} />
         </div>
       </div>
     </div>

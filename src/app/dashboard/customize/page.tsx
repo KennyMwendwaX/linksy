@@ -7,7 +7,7 @@ export default async function Customize() {
   const { data: profileCustomization, error: profileCustomizationError } =
     await tryCatch(getProfileCustomization());
 
-  const { data: links, error: linksError } = await tryCatch(
+  const { data: activeLinks, error: linksError } = await tryCatch(
     getActiveUserLinks()
   );
 
@@ -23,7 +23,7 @@ export default async function Customize() {
     <>
       <ProfileCustomization
         customization={profileCustomization}
-        links={links}
+        activeLinks={activeLinks}
       />
     </>
   );

@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { ThemeConfig, ProfileData, LinkItem } from "@/lib/types";
+import { ThemeConfig, ProfileData } from "@/lib/types";
 import { cn, getShapeClasses } from "@/lib/utils";
 import { IconComponent } from "@/lib/icon-mapper";
 import { useMemo } from "react";
 import { useSession } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "@/server/database/schema";
 
 type ProfilePreviewProps = {
   theme: ThemeConfig;
   profile: ProfileData;
-  links: LinkItem[];
+  links: Link[];
 };
 
 export default function ProfilePreview({
