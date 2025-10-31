@@ -9,6 +9,7 @@ export const getUserProfileInfo = async (username: string) => {
     const user = await db.query.users.findFirst({
       where: eq(users.username, username),
     });
+
     if (!user) {
       throw new Error("User not found");
     }

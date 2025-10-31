@@ -49,13 +49,3 @@ export interface ProfileInfo {
   image: string | null | undefined;
   bio: string;
 }
-
-export interface LinkItem {
-  status: "active" | "inactive" | "expired" | "archived";
-  id: number;
-  name: string;
-  originalUrl: string;
-  slug: string;
-  order: number;
-  displayType: "button" | "social";
-}
