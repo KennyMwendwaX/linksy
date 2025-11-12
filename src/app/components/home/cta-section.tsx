@@ -6,10 +6,10 @@ export default function CtaSection() {
   return (
     <section className="py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary/50 px-8 py-16 md:px-16 md:py-20">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/20 to-transparent"></div>
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary to-primary/50 px-8 py-16 md:px-16 md:py-20">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] mask-[linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+          <div className="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-black/20 to-transparent"></div>
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-black/20 to-transparent"></div>
           <div className="relative mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-primary-foreground md:text-4xl/tight">
               Ready to Simplify Your Link Management?

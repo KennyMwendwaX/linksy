@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 
 export const getUserProfileInfo = async (username: string) => {
   try {
+    console.log("Fetching profile info for username:", username);
     const user = await db.query.users.findFirst({
       where: eq(users.username, username),
     });

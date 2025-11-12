@@ -96,7 +96,7 @@ export default function HowItWorksSection() {
             </div>
             <div className="order-1 md:order-2 mx-4 md:mx-0 mb-8 md:mb-0">
               <div className="relative">
-                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary to-primary/50 opacity-75 blur-xl"></div>
+                <div className="absolute -inset-1 rounded-3xl bg-linear-to-r from-primary to-primary/50 opacity-75 blur-xl"></div>
                 <div className="relative rounded-2xl border border-border bg-card overflow-hidden">
                   <div className="flex items-center gap-2 border-b border-border bg-muted/50 px-4 py-3">
                     <div className="flex gap-1.5">
@@ -110,7 +110,7 @@ export default function HowItWorksSection() {
                   </div>
                   <div className="w-full">
                     <Image
-                      src="/placeholder.svg?height=300&width=500"
+                      src="/analytics.png"
                       alt="Linksy Dashboard"
                       width={500}
                       height={300}

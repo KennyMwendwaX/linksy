@@ -22,11 +22,11 @@ export default function HeroSection() {
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
       {/* Gradient background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-0 right-0 h-[800px] bg-gradient-to-b from-primary/20 via-primary/5 to-transparent"></div>
+        <div className="absolute top-0 left-0 right-0 h-[800px] bg-linear-to-b from-primary/20 via-primary/5 to-transparent"></div>
       </div>
 
       {/* Grid pattern */}
-      <div className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_right,#80808025_1px,transparent_1px),linear-gradient(to_bottom,#80808025_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      <div className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_right,#80808025_1px,transparent_1px),linear-gradient(to_bottom,#80808025_1px,transparent_1px)] bg-size-[24px_24px]"></div>
 
       {/* Main content */}
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -75,7 +75,7 @@ export default function HeroSection() {
           </div>
 
           <div className="relative w-full max-w-5xl mt-16">
-            <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-primary to-primary/50 opacity-75 blur-xl"></div>
+            <div className="absolute -inset-0.5 rounded-2xl bg-linear-to-r from-primary to-primary/50 opacity-75 blur-xl"></div>
             <div className="relative rounded-2xl border border-border bg-card overflow-hidden">
               <div className="flex items-center gap-2 border-b border-border bg-muted/50 px-4 py-3">
                 <div className="flex gap-1.5">
@@ -89,12 +89,13 @@ export default function HeroSection() {
               </div>
               <div className="p-1">
                 <Image
-                  src="/placeholder.svg?height=600&width=1200"
+                  src="/analytics.png"
                   alt="Linksy Dashboard Preview"
                   width={1200}
                   height={600}
                   className="rounded-lg"
                   priority
+                  unoptimized
                 />
               </div>
             </div>

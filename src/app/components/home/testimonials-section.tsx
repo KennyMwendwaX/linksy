@@ -9,7 +9,7 @@ export default function TestimonialsSection() {
       author: "Sarah Johnson",
       role: "Marketing Director",
       company: "TechCorp",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://i.pravatar.cc/60?img=5",
     },
     {
       quote:
@@ -17,7 +17,7 @@ export default function TestimonialsSection() {
       author: "Michael Chen",
       role: "Content Creator",
       company: "Digital Nomad",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://i.pravatar.cc/60?img=12",
     },
     {
       quote:
@@ -25,7 +25,7 @@ export default function TestimonialsSection() {
       author: "Emma Rodriguez",
       role: "E-commerce Manager",
       company: "Retail Plus",
-      avatar: "/placeholder.svg?height=60&width=60",
+      avatar: "https://i.pravatar.cc/60?img=47",
     },
   ];
 
@@ -59,7 +59,7 @@ export default function TestimonialsSection() {
                 <div className="flex items-center">
                   <div className="relative h-12 w-12 rounded-full overflow-hidden border border-border mr-4">
                     <Image
-                      src={testimonial.avatar || "/placeholder.svg"}
+                      src={testimonial.avatar || ""}
                       alt={testimonial.author}
                       fill
                       className="object-cover"

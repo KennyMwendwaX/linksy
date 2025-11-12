@@ -265,7 +265,7 @@ export default async function PublicProfile({ params }: Props) {
 
                           {/* Smaller arrow */}
                           <div
-                            className="flex-shrink-0 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300"
+                            className="shrink-0 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300"
                             style={{
                               color:
                                 theme.button.variant === "outline"

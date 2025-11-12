@@ -4,9 +4,34 @@ import { NextRequest, NextResponse } from "next/server";
 
 type Session = typeof auth.$Infer.Session;
 
+const RESERVED_ROUTES = [
+  "/",
+  "/sign-in",
+  "/sign-up",
+  "/auth",
+  "/about",
+  "/pricing",
+  "/terms",
+  "/privacy",
+];
+
 export async function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
   const { pathname } = url;
+
+  // Skip middleware for reserved routes
+  if (
+    RESERVED_ROUTES.some(
+      (route) => pathname === route || pathname.startsWith(route + "/")
+    )
+  ) {
+    return NextResponse.next();
+  }
+
+  // Skip middleware for files with extensions (images, svg, etc.)
+  if (pathname.includes(".")) {
+    return NextResponse.next();
+  }
 
   // Handle /@username pattern - rewrite to /username (public)
   if (pathname.match(/^\/@[^/]+$/)) {
@@ -36,5 +61,10 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/@:username*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/@:username*",
+    // Exclude: api, Next.js internals, static files, and reserved routes
+    "/((?!api|_next/static|_next/image|.*\\..*|sign-in|sign-up|auth|about|pricing|terms|privacy).*)",
+  ],
 };
